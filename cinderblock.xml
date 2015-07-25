@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cinder>
+<block
+	name="UI"
+	id="com.syedrezaali.ui"
+	git="git://github.com/rezaali/Cinder-UI.git"
+	url="http://www.syedrezaali.com/#/UI/"
+	author="Reza Ali syed.reza.ali@gmail.com"
+	summary="UI is a library that helps create Future User Interfaces and Controls"
+	license="MIT"
+	>
+	<headerPattern>src/*.h</headerPattern>
+	<sourcePattern>src/*.cpp</sourcePattern>
+</block>
+</cinder>
