@@ -121,9 +121,9 @@ public:
 
     PlotterRef addPlotter( const std::string name, float *value, glm::vec2 range = glm::vec2( -1.0f, 1.0f ), int bufferSize = 64, float height = -1.0 );
 
-    WaveformRef addWaveform( const std::string name, int bufferSize, float *values, glm::vec2 range = glm::vec2( -1.0f, 1.0f ), float height = -1.0 );
+    WaveformRef addWaveform( const std::string name, int bufferSize, float *values, glm::vec2 range = glm::vec2( 1.0f, -1.0f ), float height = -1.0 );
 
-    SpectrumRef addSpectrum( const std::string name, int bufferSize, float *values, glm::vec2 range = glm::vec2( -1.0f, 1.0f ), float height = -1.0 );
+    SpectrumRef addSpectrum( const std::string name, int bufferSize, float *values, glm::vec2 range = glm::vec2( 1.0f, -1.0f ), float height = -1.0 );
 
     XYPadRef addXYPad( const std::string name, glm::vec2 value, const XYPad::Format &format = XYPad::Format() );
     XYPadRef addXYPad( const std::string name, glm::vec2 *value, const XYPad::Format &format = XYPad::Format() );
@@ -163,12 +163,12 @@ protected:
     ci::gl::VboRef                      mVboRef;
     ci::gl::GlslProgRef                 mGlslProgRef;
     
-    ci::signals::scoped_connection mPostDrawCb;
+    ci::signals::ScopedConnection mPostDrawCb;
 #if defined( CINDER_COCOA_TOUCH )
     ci::signals::scoped_connection mTouchesBeganCb, mTouchesMovedCb, mTouchesEndedCb;
 #else
-    ci::signals::scoped_connection mMouseDownCb, mMouseDragCb, mMouseUpCb, mMouseMoveCb, mMouseWheelCb;
-    ci::signals::scoped_connection mKeyDownCb, mKeyUpCb;
+    ci::signals::ScopedConnection mMouseDownCb, mMouseDragCb, mMouseUpCb, mMouseMoveCb, mMouseWheelCb;
+    ci::signals::ScopedConnection mKeyDownCb, mKeyUpCb;
 #endif
     
     std::vector<ViewRef> mLastAddedSubViews;

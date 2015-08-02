@@ -13,6 +13,10 @@ public:
         return GraphRef( new Graph( name, bufferSize, xValues, yValues, xRange, yRange ) );
     }
     
+    void setBufferX( float *values );
+    void setBufferY( float *values );
+    void setBuffers( float *xvalues, float *yvalues );
+    
     const std::string getType() override { return "Graph"; }
     
     void setClosed( bool closed );

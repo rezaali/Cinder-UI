@@ -22,6 +22,22 @@ void Graph::setClosed( bool closed )
     }
 }
 
+void Graph::setBufferX( float *values )
+{
+    mXValues = values;
+}
+
+void Graph::setBufferY( float *values )
+{
+    mYValues = values;
+}
+
+void Graph::setBuffers( float *xvalues, float *yvalues )
+{
+    mXValues = xvalues;
+    mYValues = yvalues;
+}
+
 void Graph::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color )
 {
     addPointGrid( data, color, mHitRect, 8  );

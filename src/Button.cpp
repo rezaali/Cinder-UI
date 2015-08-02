@@ -7,17 +7,17 @@ using namespace std;
 
 Button::Format::Format()
 {
-    fontSize(FontSize::SMALL).label(true).align(Alignment::RIGHT).size(ButtonDimension);
+    fontSize( FontSize::SMALL ).label( true ).align( Alignment::RIGHT ).size( ButtonDimension );
 }
 
-Button::Button( std::string name, bool value, const Format &format ) : ControlWithLabel(), mUseRef(false), mValueRef(new bool(value)), mValue(value), mFormat(format), mCallbackFn(nullptr)
+Button::Button( std::string name, bool value, const Format &format ) : ControlWithLabel(), mUseRef( false ), mValueRef( new bool( value ) ), mValue( value ), mFormat( format ), mCallbackFn( nullptr )
 {
     setName( name );
     setSize( vec2( mFormat.mSize, mFormat.mSize ) );
     setValue( value );
 }
 
-Button::Button( std::string name, bool *value, const Format &format ) : ControlWithLabel(), mUseRef(true), mValueRef(value), mValue(value), mFormat(format), mCallbackFn(nullptr)
+Button::Button( std::string name, bool *value, const Format &format ) : ControlWithLabel(), mUseRef( true ), mValueRef( value ), mValue( value ), mFormat( format ), mCallbackFn( nullptr )
 {
     setName( name );
     setSize( vec2( mFormat.mSize, mFormat.mSize ) );
