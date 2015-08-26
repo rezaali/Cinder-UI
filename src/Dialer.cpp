@@ -34,12 +34,10 @@ void DialerT<T>::setup()
     string maxLengthString = "";
     string minString = toString( mMin, mFormat.mPrecision );
     string maxString = toString( mMax, mFormat.mPrecision );
-    if(minString.length() > maxString.length())
-    {
+
+    if( minString.length() > maxString.length() ) {
         maxLengthString = minString;
-    }
-    else
-    {
+    } else {
         maxLengthString = "+"+maxString;
     }
     mSetWidth = maxLengthString.length() - 1;
@@ -147,9 +145,10 @@ void DialerT<T>::updateLabel()
 }
 
 template<typename T>
-void DialerT<T>::setCallback( const std::function<void(T)> &callback )
+DialerT<T>* DialerT<T>::setCallback( const std::function<void(T)> &callback )
 {
     mCallbackFn = callback;
+    return this;
 }
 
 template<typename T>

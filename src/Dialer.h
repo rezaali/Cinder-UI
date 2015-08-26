@@ -45,7 +45,7 @@ public:
     T getValue();
     double getNormalizedValue();
 
-    virtual void setCallback( const std::function<void(T)> &callback );
+    virtual DialerT* setCallback( const std::function<void(T)> &callback );
 
     void setMax( T max, bool keepValueTheSame = false );
     T getMax();
@@ -58,8 +58,6 @@ public:
     bool isDraggable() override { return true; }
 
 protected:
-    
-
 
     virtual void setup() override;
     void update() override;

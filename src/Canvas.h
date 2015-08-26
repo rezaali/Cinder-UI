@@ -7,6 +7,7 @@
 
 #include "Controls.h"
 
+#include "cinder/app/Window.h"
 #include "cinder/gl/Vao.h"
 #include "cinder/gl/Vbo.h"
 #include "cinder/gl/GlslProg.h"
@@ -17,7 +18,7 @@ typedef std::shared_ptr<class Canvas> CanvasRef;
 class Canvas : public Control
 {
 public:
-    Canvas( std::string name );
+    Canvas( std::string name, ci::app::WindowRef window = ci::app::getWindow() );
     ~Canvas();
     
     const std::string getType() override { return "Canvas"; }
@@ -29,6 +30,7 @@ public:
     virtual void save( const ci::fs::path &path );
     virtual void load( const ci::fs::path &path );
     
+    void setWindow( ci::app::WindowRef window ); 
     void setSize( glm::vec2 size ) override;
     
     void setEnabled( bool enabled );    
@@ -113,7 +115,7 @@ public:
     ToggleRef addToggle( const std::string name, bool *value, const Toggle::Format &format = Toggle::Format() );
 
     LabelRef addLabel( const std::string label, FontSize fontSize = FontSize::MEDIUM );
-    FpsRef addFps( FontSize fontSize = FontSize::MEDIUM );
+    FpsRef addFps( const std::string prefix = ":", FontSize fontSize = FontSize::MEDIUM );
     
     SpacerRef addSpacer();
     
@@ -181,6 +183,7 @@ protected:
     Direction mDirection;
     Alignment mAlignment;
     FontSize mFontsize;
+    ci::app::WindowRef mWindowRef;
 };
     
 } } //namespace reza::ui

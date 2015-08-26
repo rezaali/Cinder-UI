@@ -7,12 +7,12 @@ using namespace cinder;
 using namespace std;
 
 
-Fps::Fps( FontSize fontSize ) : Label( "FPS", "FPS:120.000000", fontSize ) { }
+Fps::Fps( const string prefix, FontSize fontSize ) : Label( prefix, prefix+":60.00", fontSize ), mPrefix(prefix) { }
 
 void Fps::update()
 {
     if( isVisible() )
     {
-        setLabel( "FPS:" + toString( app::getWindow()->getApp()->getAverageFps(), 2 ) );
+        setLabel( mPrefix + toString( app::getWindow()->getApp()->getAverageFps(), 2 ) );
     }
 }

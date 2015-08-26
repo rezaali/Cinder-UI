@@ -6,7 +6,7 @@ using namespace cinder;
 using namespace cinder::gl;
 using namespace std;
 
-Canvas::Canvas( std::string name ) : Control(), mCanvasWidth(CanvasWidth), mSliderHeight(SliderHeight), mGraphHeight(GraphHeight), mButtonDimension(ButtonDimension), mSpacerHeight(SpacerHeight), mDirection(Direction::SOUTH), mAlignment(Alignment::LEFT), mFontsize(FontSize::MEDIUM)
+Canvas::Canvas( std::string name, app::WindowRef window ) : Control(), mWindowRef(window), mCanvasWidth(CanvasWidth), mSliderHeight(SliderHeight), mGraphHeight(GraphHeight), mButtonDimension(ButtonDimension), mSpacerHeight(SpacerHeight), mDirection(Direction::SOUTH), mAlignment(Alignment::LEFT), mFontsize(FontSize::MEDIUM)
 {
     setName( name ); 
     setSize( vec2( mCanvasWidth, mCanvasWidth ) );
@@ -14,9 +14,6 @@ Canvas::Canvas( std::string name ) : Control(), mCanvasWidth(CanvasWidth), mSlid
     setDrawFillHighLight( false );
     setDrawOutline( false );
     setDrawOutlineHighLight( false );
-    
-//    setupShader();
-//    setupBuffers();
     enable();
 }
 
@@ -47,13 +44,19 @@ void Canvas::load( const ci::fs::path &path )
     }
 }
 
+void Canvas::setWindow( ci::app::WindowRef window )
+{
+    mWindowRef = window;
+    if( isEnabled() ) { enable(); } else { disable(); }
+}
+
 void Canvas::setSize( vec2 size )
 {
     View::setSize( size );
     mHitRect = Rectf( 0.0f, 0.0f, size.x, size.y );
 }
 
-void Canvas::setEnabled(bool enabled)
+void Canvas::setEnabled( bool enabled )
 {
     if(mEnabled != enabled)
     {
@@ -71,25 +74,29 @@ void Canvas::setEnabled(bool enabled)
 void Canvas::enable()
 {
     mEnabled = true;
-    enableUpdateCallback(); 
+    if( mWindowRef->isValid() ) {
+        enableUpdateCallback();
 #if defined( CINDER_COCOA_TOUCH )
-    enableTouchCallbacks();
+        enableTouchCallbacks();
 #else
-    enableMouseCallbacks();
-    enableKeyboardCallbacks();
+        enableMouseCallbacks();
+        enableKeyboardCallbacks();
 #endif
+    }
 }
 
 void Canvas::disable()
 {
     mEnabled = false;
-    disableUpdateCallback();
+    if( mWindowRef->isValid() ) {
+        disableUpdateCallback();
 #if defined( CINDER_COCOA_TOUCH )
-    disableTouchCallbacks();
+        disableTouchCallbacks();
 #else
-    disableMouseCallbacks();
-    disableKeyboardCallbacks();
+        disableMouseCallbacks();
+        disableKeyboardCallbacks();
 #endif
+    }
 }
 
 void Canvas::clearPlacer()
@@ -99,8 +106,7 @@ void Canvas::clearPlacer()
 
 void Canvas::setPlacer( ViewRef subView )
 {
-    if( !subView )
-    {
+    if( !subView ) {
         return;
     }
     std::remove( mLastAddedSubViews.begin(), mLastAddedSubViews.end(), subView );
@@ -348,7 +354,7 @@ ViewRef Canvas::addSubViewEastOf( ViewRef subView, std::string referenceName, bo
 
 void Canvas::enableUpdateCallback()
 {
-    mPostDrawCb = ci::app::getWindow()->getSignalPostDraw().connect( [this]() {
+    mPostDrawCb = mWindowRef->getSignalPostDraw().connect( [this]() {
         update();
         draw();
     } );
@@ -395,13 +401,13 @@ void Canvas::disableUpdateCallback()
 
 void Canvas::enableTouchCallbacks()
 {
-    mTouchesBeganCb = ci::app::getWindow()->getSignalTouchesBegan().connect( [this]( ci::app::TouchEvent event ) {
+    mTouchesBeganCb = mWindowRef->getSignalTouchesBegan().connect( [this]( ci::app::TouchEvent event ) {
         touchesBegan( event );
     } );
-    mTouchesMovedCb = ci::app::getWindow()->getSignalTouchesMoved().connect( [this]( ci::app::TouchEvent event ) {);
+    mTouchesMovedCb = mWindowRef->getSignalTouchesMoved().connect( [this]( ci::app::TouchEvent event ) {);
         touchesMoved( event );
     } );
-    mTouchesEndedCb = ci::app::getWindow()->getSignalTouchesEnded().connect( [this]( ci::app::TouchEvent event ) {
+    mTouchesEndedCb = mWindowRef->getSignalTouchesEnded().connect( [this]( ci::app::TouchEvent event ) {
         touchesEnded( event );
     } );
 }
@@ -417,19 +423,19 @@ void Canvas::disableTouchCallbacks()
 
 void Canvas::enableMouseCallbacks()
 {
-    mMouseDownCb = ci::app::getWindow()->getSignalMouseDown().connect( [this]( ci::app::MouseEvent event ) {
+    mMouseDownCb = mWindowRef->getSignalMouseDown().connect( [this]( ci::app::MouseEvent event ) {
         mouseDown( event );
     } );
-    mMouseUpCb = ci::app::getWindow()->getSignalMouseUp().connect( [this]( ci::app::MouseEvent event ) {
+    mMouseUpCb = mWindowRef->getSignalMouseUp().connect( [this]( ci::app::MouseEvent event ) {
         mouseUp( event );
     } );
-    mMouseMoveCb = ci::app::getWindow()->getSignalMouseMove().connect( [this]( ci::app::MouseEvent event ) {
+    mMouseMoveCb = mWindowRef->getSignalMouseMove().connect( [this]( ci::app::MouseEvent event ) {
         mouseMove( event );
     } );
-    mMouseWheelCb = ci::app::getWindow()->getSignalMouseWheel().connect( [this]( ci::app::MouseEvent event ) {
+    mMouseWheelCb = mWindowRef->getSignalMouseWheel().connect( [this]( ci::app::MouseEvent event ) {
         mouseWheel( event );
     } );
-    mMouseDragCb = ci::app::getWindow()->getSignalMouseDrag().connect( [this]( ci::app::MouseEvent event ) {
+    mMouseDragCb = mWindowRef->getSignalMouseDrag().connect( [this]( ci::app::MouseEvent event ) {
         mouseDrag( event );
     } );
 }
@@ -447,10 +453,10 @@ void Canvas::disableMouseCallbacks()
 //KeyBoard Callbacks
 void Canvas::enableKeyboardCallbacks()
 {
-    mKeyDownCb = ci::app::getWindow()->getSignalKeyDown().connect( [this]( ci::app::KeyEvent event ) {
+    mKeyDownCb = mWindowRef->getSignalKeyDown().connect( [this]( ci::app::KeyEvent event ) {
         keyDown( event );
     } );
-    mKeyUpCb = ci::app::getWindow()->getSignalKeyUp().connect( [this]( ci::app::KeyEvent event ) {
+    mKeyUpCb = mWindowRef->getSignalKeyUp().connect( [this]( ci::app::KeyEvent event ) {
         keyUp( event );
     } );
 }
@@ -717,9 +723,9 @@ LabelRef Canvas::addLabel( const string label, FontSize fontSize )
     return ref;
 }
 
-FpsRef Canvas::addFps( FontSize fontSize )
+FpsRef Canvas::addFps( const std::string prefix, FontSize fontSize )
 {
-    FpsRef ref = Fps::create( fontSize );
+    FpsRef ref = Fps::create( prefix, fontSize );
     addSubViewPosition( ref, mDirection, mAlignment );
     return ref;
 }
