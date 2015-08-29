@@ -15,13 +15,16 @@ public:
 
     struct Format {
     public:
-        Format() { fontSize(FontSize::SMALL).precision(3); }
-        Format( const Format &copy ) { mFontSize = copy.mFontSize; mPrecision = copy.mPrecision; }
+        Format() { fontSize(FontSize::SMALL).precision(3).label(true).sign(true); }
+        Format( const Format &copy ) { mFontSize = copy.mFontSize; mPrecision = copy.mPrecision; mLabel = copy.mLabel; mSign = copy.mSign; }
         Format&	fontSize( FontSize fontSize ) { mFontSize = fontSize; return *this; }
+        Format&	label( bool label ) { mLabel = label; return *this; }
         Format&	precision( int pre ) { mPrecision = pre; return *this; }
+        Format& sign( bool sign ) { mSign = sign; return *this; }
     protected:
         FontSize mFontSize;
         int mPrecision;
+        bool mLabel, mSign;
         friend class DialerT;
     };
     

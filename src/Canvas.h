@@ -18,7 +18,14 @@ typedef std::shared_ptr<class Canvas> CanvasRef;
 class Canvas : public Control
 {
 public:
-    Canvas( std::string name, ci::app::WindowRef window = ci::app::getWindow() );
+    static CanvasRef create( std::string name, const ci::app::WindowRef& window = ci::app::getWindow() )
+    {
+        CanvasRef ref = CanvasRef( new Canvas( name, window ) );
+        ref->setup();
+        return ref;
+    }    
+
+    Canvas( std::string name, const ci::app::WindowRef& window = ci::app::getWindow() );
     ~Canvas();
     
     const std::string getType() override { return "Canvas"; }

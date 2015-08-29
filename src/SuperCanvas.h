@@ -8,14 +8,14 @@ typedef std::shared_ptr<class SuperCanvas> SuperCanvasRef;
 class SuperCanvas : public Canvas
 {
 public:
-    static SuperCanvasRef create( std::string name, ci::app::WindowRef window = ci::app::getWindow() )
+    static SuperCanvasRef create( std::string name, const ci::app::WindowRef& window = ci::app::getWindow() )
     {
         SuperCanvasRef ref = SuperCanvasRef( new SuperCanvas( name, window ) );
         ref->setup();
         return ref; 
     }
 
-    SuperCanvas( std::string title, ci::app::WindowRef window );
+    SuperCanvas( std::string title, const ci::app::WindowRef& window );
     const std::string getType() override { return "SuperCanvas"; }
     
     void save( const ci::fs::path &path ) override;

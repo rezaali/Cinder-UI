@@ -58,7 +58,7 @@ void Radio::trigger( bool recursive )
 JsonTree Radio::save()
 {
     JsonTree tree = View::save();
-    if( mActive ) tree.addChild( JsonTree( "ACTIVE", mActive->getName() ) );
+    if( mActive ) tree.addChild( JsonTree( "ACTIVE", mActive->getValue() ? mActive->getName() : "" ) );
     return tree;
 }
 

@@ -42,6 +42,12 @@ void DialerT<T>::setup()
     }
     mSetWidth = maxLengthString.length() - 1;
     mNumOfPrecisionZones = maxLengthString.length();
+
+    if( !mFormat.mSign ) {
+//        mSetWidth--;
+        mNumOfPrecisionZones--;
+        maxLengthString = maxLengthString.substr( 1 );
+    }
     
     size_t dotIndex = maxLengthString.find(".");
     if( dotIndex == string::npos )
@@ -59,7 +65,7 @@ void DialerT<T>::setup()
         mLabelRef = Label::create( mName + "_LABEL", maxLengthString, mFormat.mFontSize );
         addSubView( mLabelRef );
     }
-    mLabelWidth = mLabelRef->getStringWidth(maxLengthString);
+    mLabelWidth = mLabelRef->getStringWidth( maxLengthString );
     mDigitWidth = mLabelWidth / (float) mNumOfPrecisionZones;
     mLabelRef->setOrigin( vec2( mPadding.mLeft, mPadding.mTop ) );
     vec2 size = mLabelRef->getSize();
@@ -140,8 +146,15 @@ void DialerT<T>::updateValueRef()
 template<typename T>
 void DialerT<T>::updateLabel()
 {
-    T value = getValue();    
-    setLabel( ( value > 0 ? "+" : "-" ) + toString( fabs(value), mFormat.mPrecision, mSetWidth, '0' ) + " " + mName );
+    T value = getValue();
+    string label = "";
+    if( mFormat.mSign ) { label += ( value > 0 ? "+" : "-" ); }
+    
+    label += toString( fabs(value), mFormat.mPrecision, mSetWidth, '0' );
+
+    if( mFormat.mLabel ) { label += " " + mName; }
+    
+    setLabel( label );
 }
 
 template<typename T>

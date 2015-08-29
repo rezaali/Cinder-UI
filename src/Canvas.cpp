@@ -6,7 +6,7 @@ using namespace cinder;
 using namespace cinder::gl;
 using namespace std;
 
-Canvas::Canvas( std::string name, app::WindowRef window ) : Control(), mWindowRef(window), mCanvasWidth(CanvasWidth), mSliderHeight(SliderHeight), mGraphHeight(GraphHeight), mButtonDimension(ButtonDimension), mSpacerHeight(SpacerHeight), mDirection(Direction::SOUTH), mAlignment(Alignment::LEFT), mFontsize(FontSize::MEDIUM)
+Canvas::Canvas( std::string name, const app::WindowRef& window ) : Control(), mWindowRef(window), mCanvasWidth(CanvasWidth), mSliderHeight(SliderHeight), mGraphHeight(GraphHeight), mButtonDimension(ButtonDimension), mSpacerHeight(SpacerHeight), mDirection(Direction::SOUTH), mAlignment(Alignment::LEFT), mFontsize(FontSize::MEDIUM)
 {
     setName( name ); 
     setSize( vec2( mCanvasWidth, mCanvasWidth ) );
@@ -362,16 +362,13 @@ void Canvas::enableUpdateCallback()
 
 void Canvas::draw()
 {
-    if( !mSetup ) setup();
+    if( !mSetup ) { setup(); }
     
     getRenderData();
     
-    if( !mGlslProgRef )
-    {
+    if( !mGlslProgRef ) {
         setupShader();
-    }
-    else
-    {
+    } else {
         gl::pushMatrices();
         gl::setMatricesWindow( app::getWindowWidth(), app::getWindowHeight() );
         

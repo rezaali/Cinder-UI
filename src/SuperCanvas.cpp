@@ -5,7 +5,7 @@ using namespace glm;
 using namespace cinder;
 using namespace std;
 
-SuperCanvas::SuperCanvas( std::string title, ci::app::WindowRef window ) : Canvas( title, window ), mDeltaTime(0.35f), mLastHitTime(-1), mIsMinified(false), mLabelHit(false), mHitPos(vec2(0,0)), mLastPos(vec2(0,0)), mLabelRef(nullptr) { }
+SuperCanvas::SuperCanvas( std::string title, const ci::app::WindowRef& window ) : Canvas( title, window ), mDeltaTime(0.35f), mLastHitTime(-1), mIsMinified(false), mLabelHit(false), mHitPos(vec2(0,0)), mLastPos(vec2(0,0)), mLabelRef(nullptr) { }
 
 void SuperCanvas::setup()
 {
