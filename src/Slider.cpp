@@ -68,7 +68,7 @@ template<typename T>
 JsonTree SliderT<T>::save()
 {
     JsonTree tree = View::save();
-    tree.addChild( JsonTree( "VALUE",  getValue() ) );
+    tree.addChild( JsonTree( "VALUE",  isnan( getValue() ) ? mMin : getValue() ) );
     return tree;
 }
 
@@ -122,9 +122,10 @@ void SliderT<T>::updateLabel()
 }
 
 template<typename T>
-void SliderT<T>::setCallback( const std::function<void(T)> &callback )
+SliderT<T>* SliderT<T>::setCallback( const std::function<void(T)> &callback )
 {
-    mCallbackFn = callback; 
+    mCallbackFn = callback;
+    return this; 
 }
 
 template<typename T>

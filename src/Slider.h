@@ -57,7 +57,7 @@ public:
     T getValue();
     double getNormalizedValue();
     
-    virtual void setCallback( const std::function<void(T)> &callback );
+    virtual SliderT* setCallback( const std::function<void(T)> &callback );
 
     void setMax( T max, bool keepValueTheSame = false );
     T getMax();

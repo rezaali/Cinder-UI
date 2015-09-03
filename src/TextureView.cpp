@@ -25,7 +25,9 @@ void TextureView::draw()
 {
     Rectf rect = mHitRect;
     rect += getOrigin();
-    gl::draw( mTextureRef, rect );
+    if( mTextureRef ) {
+        gl::draw( mTextureRef, rect );
+    }
     Control::draw();
 }
 
