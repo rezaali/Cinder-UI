@@ -625,9 +625,9 @@ DialerdRef Canvas::addDialerd( const std::string name, double *value, double min
     return ref;
 }
 
-MultiSliderRef Canvas::addMultiSlider( const std::string name, const std::vector<MultiSlider::Data> data )
+MultiSliderRef Canvas::addMultiSlider( const std::string name, const std::vector<MultiSlider::Data> data,  MultiSlider::Format format )
 {
-    MultiSliderRef ref = MultiSlider::create( name, data );
+    MultiSliderRef ref = MultiSlider::create( name, data, format );
     ref->setSize( vec2( getWidth() - mPadding.mLeft - mPadding.mRight, mSliderHeight ) );
     addSubViewPosition( ref, mDirection, mAlignment );
     return ref;

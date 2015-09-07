@@ -105,7 +105,7 @@ public:
     DialerdRef addDialerd( const std::string name, double value, double min, double max, Dialerd::Format format = Dialerd::Format() );
     DialerdRef addDialerd( const std::string name, double *value, double min, double max, Dialerd::Format format = Dialerd::Format() );
 
-    MultiSliderRef addMultiSlider( const std::string name, const std::vector<MultiSlider::Data> data );
+    MultiSliderRef addMultiSlider( const std::string name, const std::vector<MultiSlider::Data> data, MultiSlider::Format format = MultiSlider::Format() );
     
     RangeiRef addRangei( const std::string name, int valueLow, int valueHigh, int min = 0, int max = 255, Rangei::Format format = Rangei::Format() );
     RangefRef addRangef( const std::string name, float valueLow, float valueHigh, float min = 0.0f, float max = 1.0f, Rangef::Format format = Rangef::Format() );

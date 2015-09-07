@@ -3,6 +3,7 @@
 #include "ControlWithLabel.h"
 #include "Button.h"
 #include "Toggle.h"
+#include "Directions.h"
 
 namespace reza { namespace ui {
     
@@ -12,23 +13,26 @@ class Radio : public ControlWithLabel
 public:
     struct Format {
     public:
-        Format() { label(false).fontSize(FontSize::SMALL).active("").buttonFormat(Button::Format()); }
+        Format() { label(false).fontSize( FontSize::SMALL ).active( "" ).buttonFormat( Button::Format() ).direction( Direction::SOUTH ); }
         Format( const Format &copy )
         {
-            mLabel = copy.mLabel;
+            mLabel = copy.mLabel;            
             mFontSize = copy.mFontSize;
             mActive = copy.mActive;
             mButtonFormat = copy.mButtonFormat;
+            mDirection = copy.mDirection;
         }
         Format&	fontSize( FontSize fontSize ) { mFontSize = fontSize; return *this; }
         Format&	label( bool label = true ) { mLabel = label; return *this; }
         Format& active( std::string active ) { mActive = active; return *this; }
-        Format& buttonFormat( const Button::Format &buttonFormat ) { mButtonFormat = buttonFormat; return *this; }
+        Format& buttonFormat( const Button::Format& buttonFormat ) { mButtonFormat = buttonFormat; return *this; }
+        Format& direction( Direction direcion = Direction::EAST ) { mDirection = direcion; ;return *this; }
     protected:
         Button::Format mButtonFormat;
         FontSize mFontSize;
         bool mLabel;
         std::string mActive;
+        Direction mDirection;
         friend class Radio;
     };
 

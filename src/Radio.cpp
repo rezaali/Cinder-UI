@@ -15,13 +15,20 @@ Radio::~Radio() { }
 
 void Radio::setup()
 {
-    float yOffset = 0;
+    vec2 offset = vec2( 0.0f );
     if( !mLabelRef && mFormat.mLabel )
     {
         mLabelRef = Label::create( mName + "_LABEL", mName, mFormat.mFontSize );
         addSubView( mLabelRef );
         mLabelRef->setOrigin( vec2( 0.0f, 0.0f ) );
-        yOffset += mLabelRef->getSize().y;
+        if( mFormat.mDirection == Direction::SOUTH )
+        {
+            offset.y += mLabelRef->getSize().y;
+        }
+        else if( mFormat.mDirection == Direction::EAST )
+        {
+            offset.x += mLabelRef->getSize().x;
+        }
     }
     
     int index = 0;
@@ -29,13 +36,23 @@ void Radio::setup()
     for( auto &it : mOptions )
     {
         ToggleRef toggle = Toggle::create( it, false, mFormat.mButtonFormat );
-        vec2 offset = vec2( 0.0f, yOffset );
         if( last != nullptr )
         {
-            offset = vec2( 0.0f, last->getOrigin().y + last->getBounds( true ).getHeight() + mPadding.mBottom );
-        }        
+            if( mFormat.mDirection == Direction::SOUTH ) {
+                offset = vec2( 0.0f, last->getOrigin().y + last->getBounds( true ).getHeight() + mPadding.mBottom );
+            }
+            else if( mFormat.mDirection == Direction::EAST ) {
+                offset = vec2( last->getOrigin().x + last->getBounds( true ).getWidth() + mPadding.mRight, 0.0f );
+            }
+        }
         toggle->setOrigin( offset );
-        toggle->setCallback([this, toggle](bool value){ if( value ) { this->activate( toggle->getName() ); } } );
+        toggle->setCallback( [ this, toggle ] ( bool value ) {
+            if( value ) {
+                this->activate( toggle->getName() );
+            } else if( toggle == mActive ) {
+                toggle->setValue( true ); 
+            }
+        } );
         mToggleMap[it] = toggle;
         addSubView( toggle ); 
         index++;

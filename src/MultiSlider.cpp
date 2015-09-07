@@ -4,7 +4,7 @@ using namespace reza::ui;
 using namespace cinder;
 using namespace std;
 
-MultiSlider::MultiSlider( std::string name, const std::vector<Data> data ): Control(), mData(data), mHitKey(""), mHoverKey(""), mCallbackFn(nullptr)
+MultiSlider::MultiSlider( std::string name, const std::vector<Data> data, Format format ): Control(), mData(data), mHitKey(""), mHoverKey(""), mCallbackFn(nullptr), mFormat( format )
 {
     setName( name );
     setSize( vec2( 192.0f, 16.0f ) );
@@ -185,7 +185,6 @@ void MultiSlider::_draw( std::vector<RenderData> &data, const ci::ColorA &color,
 
     vec2 size = mHitRect.getSize();
     float width = size.x - ( mPadding.mLeft + mPadding.mRight );
-    Rectf rect = mHitRect;
     bool drawAll = false;
     if( key == "invalid" )
     {
@@ -193,11 +192,23 @@ void MultiSlider::_draw( std::vector<RenderData> &data, const ci::ColorA &color,
     }
     for( auto &it : mData )
     {
+        Rectf rect = mHitRect;   
         rect.y1 = mHitRect.y1 + mPadding.mTop + (mSliderSpacing + mSliderHeight)*index;
         rect.y2 = rect.y1 + mSliderHeight;
-        
-        rect.x1 = mHitRect.x1 + mPadding.mLeft;
-        rect.x2 = rect.x1 + width * getNormalizedValue( it.mKey );
+     
+        if( mFormat.mCrossFader )
+        {
+            float h = mSliderHeight;
+            float hh = h*0.5;
+            rect.x2 = rect.x1 + ( width - h ) * getNormalizedValue( it.mKey ) + hh;
+            rect.x1 = rect.x2 - hh;
+            rect.x2 = rect.x1 + h;
+        }
+        else
+        {
+            rect.x1 = mHitRect.x1 + mPadding.mLeft;
+            rect.x2 = rect.x1 + width * getNormalizedValue( it.mKey );
+        }
         
         if( it.mKey == key || drawAll )
         {

@@ -18,9 +18,21 @@ public:
         float mMax;
     };
     
-    static MultiSliderRef create( const std::string name, const std::vector<Data> data )
+    struct Format {
+    public:
+        Format() { crossFader(false); }
+        Format( const Format &copy ) {
+            mCrossFader = copy.mCrossFader;
+        }
+        Format& crossFader( bool crossFader = true ){ mCrossFader = crossFader; return *this; }
+    protected:
+        bool mCrossFader;
+        friend class MultiSlider;
+    };
+    
+    static MultiSliderRef create( const std::string name, const std::vector<Data> data, Format format = Format() )
     {
-        return MultiSliderRef( new MultiSlider( name, data ) );
+        return MultiSliderRef( new MultiSlider( name, data, format ) );
     }
     
     const std::string getType() override { return "MultiSlider"; }
@@ -45,7 +57,7 @@ public:
     
     bool isDraggable() override { return true; }
     
-    MultiSlider( std::string name, const std::vector<Data> data );
+    MultiSlider( std::string name, const std::vector<Data> data, Format format = Format() );
     
 protected:
     void setup() override;
@@ -75,6 +87,7 @@ protected:
     virtual void keyDown( ci::app::KeyEvent &event ) override;
     virtual void keyUp( ci::app::KeyEvent &event ) override;
     
+    Format mFormat;
     float mSliderHeight;
     float mSliderSpacing;
     std::vector<Data> mData;
