@@ -793,7 +793,13 @@ TextureViewRef Canvas::addTexture( std::string name, const ci::gl::TextureRef &t
 {
     TextureViewRef ref = TextureView::create( name, textureRef, format );
     float w = getWidth() - mPadding.mLeft - mPadding.mRight;
-    ref->setSize( vec2( w, w/textureRef->getAspectRatio() ) );
+    float h = w;
+    if( format.getHeight() ) {
+        h = format.getHeight();
+    } else if( textureRef != nullptr ) {
+        h = ( w / textureRef->getAspectRatio() ) ;
+    }
+    ref->setSize( vec2( w, h ) );
     addSubViewPosition( ref, mDirection, mAlignment );
     return ref;
 }

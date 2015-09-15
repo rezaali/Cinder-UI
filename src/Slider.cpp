@@ -86,7 +86,7 @@ void SliderT<T>::load( const ci::JsonTree &data )
 template<typename T>
 void SliderT<T>::setValue( T value )
 {
-    if( mStickyEnabled && mFormat.mSticky )
+    if( mStickyEnabled || mFormat.mSticky )
     {
         value = ceil( value / mFormat.mStickyValue ) * mFormat.mStickyValue;
     }

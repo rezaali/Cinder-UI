@@ -15,7 +15,7 @@ public:
 
     struct Format {
     public:
-        Format() { label(true).sticky(true).stickyValue(.1).precision(2).crossFader(false); }
+        Format() { label(true).sticky(false).stickyValue(.1).precision(2).crossFader(false); }
         Format( const Format &copy ) {
             mLabel = copy.mLabel;
             mSticky = copy.mSticky;
@@ -25,7 +25,7 @@ public:
         }
         Format&	label( bool label = true ) { mLabel = label; return *this; }
         Format& sticky( bool sticky ) { mSticky = sticky; return *this; }
-        Format& stickyValue( double value ) { mSticky = true; mStickyValue = value; return *this; }
+        Format& stickyValue( double value ) { mStickyValue = value; return *this; }
         Format& precision( int precision ) { mPrecision = precision; return *this; }
         Format& crossFader( bool crossFader = true ){ mCrossFader = crossFader; return *this; }
     protected:

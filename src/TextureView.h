@@ -11,11 +11,14 @@ class TextureView : public ControlWithLabel
 public:
     struct Format {
     public:
-        Format() { label(false); }
-        Format(const Format &copy) { mLabel = copy.mLabel; }
+        Format() { height(0).label(false); }
+        Format(const Format &copy) { mLabel = copy.mLabel; mHeight = copy.mHeight; }
         Format&	label( bool label ) { mLabel = label; return *this; }
+        Format&	height( int height ) { mHeight = height; return *this; }
+        int getHeight() const { return mHeight; }
     protected:
         bool mLabel;
+        int mHeight;
         friend class TextureView;
     };
     

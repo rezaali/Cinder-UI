@@ -167,7 +167,7 @@ void XYPad::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color 
     addLine( data, color, mHitRect.getUpperLeft() + vec2( value.x*mHitRect.getWidth(), 0.0f ),
             mHitRect.getUpperLeft() + vec2( value.x*mHitRect.getWidth(), mHitRect.getHeight() ) );
     
-    addPointGrid( data, color, mHitRect, 0.5 * max( mFormat.mMax.x - mFormat.mMin.x, mFormat.mMax.y - mFormat.mMin.y ) / mFormat.mStickyValue );
+    addPointGrid( data, color, mHitRect, 8  );
     Control::drawOutline( data, color );
 }
 
