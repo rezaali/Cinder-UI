@@ -87,7 +87,9 @@ public:
     {
         return CanvasRef( new Canvas( name ) );
     }
-    
+
+    BSplineEditorRef addBSplineEditor( const std::string name, ci::BSpline2f spline, BSplineEditor::Format format = BSplineEditor::Format() );
+
     SlideriRef addSlideri( const std::string name, int value, int min = 0, int max = 255, Slideri::Format format = Slideri::Format() );
     SlideriRef addSlideri( const std::string name, int *value, int min = 0, int max = 255, Slideri::Format format = Slideri::Format() );
 

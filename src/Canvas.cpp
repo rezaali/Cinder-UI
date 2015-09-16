@@ -529,6 +529,16 @@ void Canvas::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color
     addBoundsOutline( data, color );
 }
 
+
+BSplineEditorRef Canvas::addBSplineEditor( const std::string name, BSpline2f spline, BSplineEditor::Format format )
+{
+    BSplineEditorRef ref = BSplineEditor::create( name, spline, format );
+    float w = getWidth() - mPadding.mLeft - mPadding.mRight;
+    ref->setSize( vec2( w, format.mHeight < 0.0f ? w : format.mHeight ) );
+    addSubViewPosition( ref, mDirection, mAlignment );
+    return ref;
+}
+
 SlideriRef Canvas::addSlideri( const std::string name, int value, int min, int max, Slideri::Format format )
 {
     SlideriRef ref = SliderT<int>::create( name, value, min, max, format );
@@ -842,7 +852,7 @@ vector<RenderData>& Canvas::getRenderData()
     if( mSetNeedsDisplay )
     {
         mViewRenderData = render();
-        if(mRenderData.size() < mViewRenderData.size())
+        if( mRenderData.size() < mViewRenderData.size() )
         {
             mRenderData.insert( mRenderData.begin(), mViewRenderData.begin(), mViewRenderData.end() );
             setupBuffers();

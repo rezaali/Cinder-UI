@@ -19,3 +19,4 @@
 #include "Radio.h"
 #include "TextInput.h"
 #include "ColorPicker.h"
+#include "BSplineEditor.h"

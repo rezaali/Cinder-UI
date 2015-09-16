@@ -13,7 +13,7 @@ public:
     T mBottom;
     T mLeft;
     T mRight;
-};
+}; 
 typedef PaddingT<float> Paddingf;
 typedef PaddingT<int> Paddingi;
 

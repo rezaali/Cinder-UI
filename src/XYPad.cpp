@@ -29,9 +29,9 @@ void XYPad::setup()
     if( !mLabelRef && mFormat.mLabel )
     {
         mLabelRef = Label::create( mName + "_LABEL", mName + ":" + to_string( getValue().x ), mFormat.mFontSize );
+        mLabelRef->setOrigin( vec2( 0.0f, getHeight() ) );
+        addSubView( mLabelRef );
     }
-    mLabelRef->setOrigin( vec2( 0.0f, getHeight() ) );
-    addSubView( mLabelRef );
     View::setup();
 }
 
