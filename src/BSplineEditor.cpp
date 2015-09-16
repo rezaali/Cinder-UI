@@ -4,7 +4,7 @@ using namespace reza::ui;
 using namespace cinder;
 using namespace std;
 
-BSplineEditor::BSplineEditor( string name, BSpline2f spline, const Format &format ) : ControlWithLabel(), mUseRef( false ), mSplineRef( new BSpline2f( spline ) ), mCallbackFn( nullptr ), mFormat( format )
+BSplineEditor::BSplineEditor( string name, BSpline2f spline, const Format &format ) : ControlWithLabel(), mUseRef( false ), mSplineRef( new BSpline2f( spline ) ), mCallbackFn( nullptr ), mStickyEnabled( false ), mFormat( format )
 {
     setName( name );
     setSpline( spline );
@@ -41,9 +41,6 @@ void BSplineEditor::trigger( bool recursive )
 JsonTree BSplineEditor::save()
 {
     JsonTree tree = View::save();
-//    tree.addChild( JsonTree( "DEGREE", getDegree() ) );
-//    tree.addChild( JsonTree( "LOOP",  isLoop() ) );
-//    tree.addChild( JsonTree( "OPEN",  isOpen() ) );
     JsonTree subtree = JsonTree::makeArray( "POINTS" );
     for( auto& it : mControlPoints )
     {
@@ -62,12 +59,7 @@ JsonTree BSplineEditor::save()
 
 void BSplineEditor::load( const ci::JsonTree &data )
 {
-//    if( data.hasChild( "OPEN" ) && data.hasChild( "LOOP" ) && data.hasChild( "DEGREE" ) )
-//    {
-//        setProperties( data.getValueForKey<int>( "DEGREE" ),
-//                       data.getValueForKey<bool>( "LOOP" ),
-//                       data.getValueForKey<bool>( "OPEN" ) );
-//    }
+    mControlPoints.clear(); 
     if( data.hasChild( "POINTS" ) )
     {
         auto pts = data.getChild( "POINTS" );
@@ -89,15 +81,12 @@ void BSplineEditor::load( const ci::JsonTree &data )
 
 void BSplineEditor::setSpline( BSpline2f spline )
 {
+    int total = spline.getNumControlPoints();
+    mControlPoints.clear();
+    for( int i = 0; i < total; i++ ) { mControlPoints.emplace_back( spline.getControlPoint( i ) ); }
     mOpen = spline.isOpen();
     mLoop = spline.isLoop();
-    mDegree = spline.getDegree();
-    mControlPoints.clear();
-    int total = spline.getNumControlPoints();
-    for( int i = 0; i < total; i++ )
-    {
-        mControlPoints.emplace_back( spline.getControlPoint( i ) );
-    }
+    mDegree = ( total == -1 ) ? 1 : spline.getDegree();
     updateSplineRef();
 }
 
@@ -109,9 +98,7 @@ void BSplineEditor::setSplineRef( BSpline2f *spline )
         delete mSplineRef;
     }
     mSplineRef = spline;
-    mDegree = mSplineRef->getDegree();
-    mLoop = mSplineRef->isLoop();
-    mOpen = mSplineRef->isOpen();
+    setSpline( *mSplineRef );
 }
 
 BSpline2f BSplineEditor::getSpline()
@@ -136,7 +123,7 @@ bool BSplineEditor::isOpen()
 
 void BSplineEditor::setDegree( int degree )
 {
-    if( mDegree != degree && ( degree > 0 ) && ( degree <= ( mControlPoints.size() - 1 ) ) )
+    if( mDegree != degree )
     {
         mDegree = degree;
         updateSplineRef( true );
@@ -175,6 +162,12 @@ void BSplineEditor::setProperties( int degree, bool loop, bool open )
 
 void BSplineEditor::updateSplineRef( bool force )
 {
+    setNeedsDisplay();
+    if( !isValid() )
+    {
+        return;
+    }
+    
     if( ( mControlPoints.size() != mSplineRef->getNumControlPoints() ) || force )
     {
         delete mSplineRef;
@@ -188,7 +181,6 @@ void BSplineEditor::updateSplineRef( bool force )
             mSplineRef->setControlPoint( i, mControlPoints[i] );
         }
     }
-    setNeedsDisplay();
 }
 
 void BSplineEditor::setCallback( const std::function<void(BSpline2f)> &callback )
@@ -252,6 +244,12 @@ std::vector<RenderData> BSplineEditor::render()
 
 void BSplineEditor::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color )
 {
+    for( auto it : mControlPoints )
+    {
+        vec2 curr = map( it );
+        addPoint( data, color, curr, 6.0 );
+    }
+    addPointGrid( data, color, mHitRect, 8  );
     Control::drawOutline( data, color );
 }
 
@@ -262,7 +260,7 @@ void BSplineEditor::drawOutlineHighlight( std::vector<RenderData> &data, const c
 
 void BSplineEditor::drawFill( std::vector<RenderData> &data, const ci::ColorA &color )
 {
-    if( mSplineRef != nullptr && mSplineRef->getNumControlPoints() > 0 )
+    if( mSplineRef != nullptr && mValid )
     {
         vec2 last = vec2( 0.0 );
         vec2 curr = vec2( 0.0 );
@@ -276,12 +274,12 @@ void BSplineEditor::drawFill( std::vector<RenderData> &data, const ci::ColorA &c
             }
             last = curr;
         }
-        
-        for( auto it : mControlPoints )
-        {
-            vec2 curr = map( it );
-            addPoint( data, color, curr, 3.0 );
-        }
+    }
+    
+    for( auto it : mControlPoints )
+    {
+        vec2 curr = map( it );
+        addPoint( data, color, curr, 3.0 );
     }
     
     if( mHitIndex != -1 )
@@ -307,7 +305,7 @@ void BSplineEditor::input( const ci::app::MouseEvent& event )
     hp = vec2( lmap<float>( hp.x, 0.0, 1.0, mFormat.mMin.x, mFormat.mMax.x ),
               lmap<float>( hp.y, 0.0, 1.0, mFormat.mMin.y, mFormat.mMax.y ) );
     
-    if( event.isShiftDown() || mFormat.mSticky )
+    if( mStickyEnabled || mFormat.mSticky )
     {
         hp.x = ceil( hp.x / mFormat.mStickyValue ) * mFormat.mStickyValue;
         hp.y = ceil( hp.y / mFormat.mStickyValue ) * mFormat.mStickyValue;
@@ -327,7 +325,7 @@ void BSplineEditor::input( const ci::app::MouseEvent& event )
         }
         if( distance < ( length( mFormat.mMax - mFormat.mMin ) * mFormat.mThreshold ) ) {
             mHitIndex = index;
-            if( ( event.isRight() || event.isMetaDown() ) && ( mControlPoints.size() - 1 ) > mSplineRef->getDegree() )
+            if( ( event.isRight() || event.isMetaDown() ) )
             {
                 mControlPoints.erase( mControlPoints.begin() + mHitIndex );
                 updateSplineRef();
@@ -396,15 +394,6 @@ void BSplineEditor::mouseUp( ci::app::MouseEvent &event )
 void BSplineEditor::mouseWheel( ci::app::MouseEvent &event )
 {
     View::mouseWheel( event );
-    if( mHit && mHitIndex != -1 )
-    {
-        float value = mSplineRef->getKnot( mHitIndex );
-        value += event.getWheelIncrement()*0.1;
-        cout << event.getWheelIncrement() << endl;
-        value = min( max( value, 0.0f ), 1.0f );
-        mSplineRef->setKnot( mHitIndex, value );
-        cout << "HIT: " << mHitIndex << " VALUE: " << value << endl;
-    }
 }
 
 void BSplineEditor::mouseMove( ci::app::MouseEvent &event )
@@ -437,6 +426,26 @@ void BSplineEditor::mouseDrag( ci::app::MouseEvent &event )
     {
         setState( State::NORMAL );
     }
+}
+
+void BSplineEditor::keyDown( ci::app::KeyEvent &event )
+{
+    if( event.isShiftDown() )
+    {
+        mStickyEnabled = true;
+    }
+}
+
+
+void BSplineEditor::keyUp( ci::app::KeyEvent &event )
+{
+    mStickyEnabled = false;
+}
+
+bool BSplineEditor::isValid()
+{
+    mValid = ( ( mControlPoints.size() >= 2 ) && ( mDegree > 0 ) && ( mDegree <= ( mControlPoints.size() - 1 ) ) );
+    return mValid;
 }
 
 vec2 BSplineEditor::map( const vec2& pt )

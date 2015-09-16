@@ -23,7 +23,7 @@ public:
             mMax = glm::vec2( 1.0 );
             mStickyValue = 0.05;
             mResolution = 512;
-            mThreshold = 0.1;
+            mThreshold = 0.025;
         }
         Format( const Format &copy ) {
             mFontSize = copy.mFontSize;
@@ -78,6 +78,7 @@ public:
     void setDegree( int degree );
     void setLoop( bool loop );
     void setOpen( bool open );
+    bool isValid();
     
     void updateSplineRef( bool force = false );
     
@@ -117,8 +118,11 @@ protected:
     virtual void mouseWheel( ci::app::MouseEvent &event ) override;
     virtual void mouseMove( ci::app::MouseEvent &event ) override;
     virtual void mouseDrag( ci::app::MouseEvent &event ) override;
-        
-    ci::vec2 map( const ci::vec2& pt ); 
+    
+    virtual void keyDown( ci::app::KeyEvent &event ) override;
+    virtual void keyUp( ci::app::KeyEvent &event ) override;
+
+    ci::vec2 map( const ci::vec2& pt );
     ci::vec2 norm( const ci::vec2& pt );
     ci::vec2 expand( const ci::vec2& pt );
     
@@ -126,8 +130,10 @@ protected:
     int mDegree;
     bool mLoop;
     bool mOpen;    
+    bool mValid;
+    bool mStickyEnabled;
     ci::BSpline2f *mSplineRef;
-    int mHitIndex = -1; 
+    int mHitIndex = -1;
     std::vector<ci::vec2> mControlPoints;
     bool mUseRef;
     std::function<void(ci::BSpline2f)> mCallbackFn;
