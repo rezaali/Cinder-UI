@@ -7,9 +7,15 @@
 
 namespace reza { namespace ui {
 
+typedef std::shared_ptr<class Control> ControlRef;
 class Control : public View
 {
 public:
+    static ControlRef create()
+    {
+        return ControlRef( new Control() );
+    }
+    
     Control();
     virtual ~Control();
 

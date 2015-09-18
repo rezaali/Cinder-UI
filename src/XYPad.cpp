@@ -37,7 +37,7 @@ void XYPad::setup()
 
 void XYPad::update()
 {
-    if( mUseRef )
+    if( mUseRef && mVisible )
     {
         vec2 scaledValue = vec2( lmap<float>( mValue.x, 0.0, 1.0, mFormat.mMin.x, mFormat.mMax.x ),
                                  lmap<float>( mValue.y, 0.0, 1.0, mFormat.mMin.y, mFormat.mMax.y ) );

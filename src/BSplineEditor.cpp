@@ -16,6 +16,11 @@ BSplineEditor::~BSplineEditor()
     {
         delete mSplineRef;
     }
+    
+    if( !mFormat.mUseTimePointRef )
+    {
+        delete mFormat.mTimePointRef;
+    }
 }
 
 void BSplineEditor::setup()
@@ -26,7 +31,25 @@ void BSplineEditor::setup()
         mLabelRef->setOrigin( vec2( 0.0f, getHeight() ) );
         addSubView( mLabelRef );
     }
+    if( !mFormat.mTimePointRef )
+    {
+        mFormat.mTimePointRef = new float( mFormat.mTimePoint );
+    }
     View::setup();
+}
+
+void BSplineEditor::update()
+{
+    if( mFormat.mShowTimePoint && mFormat.mUseTimePointRef && mVisible )
+    {
+        float time = *mFormat.mTimePointRef;
+        if( time != mFormat.mTimePoint )
+        {
+            mFormat.mTimePoint = time;
+            setNeedsDisplay();
+        }
+    }
+    View::update();
 }
 
 void BSplineEditor::trigger( bool recursive )
@@ -87,7 +110,7 @@ void BSplineEditor::setSpline( BSpline2f spline )
     mOpen = spline.isOpen();
     mLoop = spline.isLoop();
     mDegree = ( total == -1 ) ? 1 : spline.getDegree();
-    updateSplineRef();
+    updateSplineRef( true );
 }
 
 void BSplineEditor::setSplineRef( BSpline2f *spline )
@@ -121,6 +144,15 @@ bool BSplineEditor::isOpen()
     return mOpen;
 }
 
+void BSplineEditor::setProperties( int degree, bool loop, bool open )
+{
+    mDegree = degree;
+    mLoop = loop;
+    mOpen = open;
+    updateSplineRef( true );
+    trigger();
+}
+
 void BSplineEditor::setDegree( int degree )
 {
     if( mDegree != degree )
@@ -151,13 +183,26 @@ void BSplineEditor::setOpen( bool open )
     }
 }
 
-void BSplineEditor::setProperties( int degree, bool loop, bool open )
+void BSplineEditor::setShowTimePoint( bool showTimePoint )
 {
-    mDegree = degree;
-    mLoop = loop;
-    mOpen = open;
-    updateSplineRef( true );
-    trigger();
+    mFormat.mShowTimePoint = showTimePoint;
+}
+
+void BSplineEditor::setTimePoint( float timePoint )
+{
+    setShowTimePoint( true );
+    *mFormat.mTimePointRef = timePoint;
+}
+
+void BSplineEditor::setTimePointRef( float* timePointRef )
+{
+    setShowTimePoint( true );
+    if( !mFormat.mUseTimePointRef )
+    {
+        delete mFormat.mTimePointRef;
+        mFormat.mUseTimePointRef = true;
+    }
+    mFormat.mTimePointRef = timePointRef;
 }
 
 void BSplineEditor::updateSplineRef( bool force )
@@ -235,7 +280,7 @@ std::vector<RenderData> BSplineEditor::render()
     drawFillHighlight( data, ( mDrawFillHighlight && mVisible ) ? mColorFillHighlight : mColorClear );
     drawOutline( data, ( mDrawOutline && mVisible ) ? mColorOutline : mColorClear );
     drawOutlineHighlight( data, ( mDrawOutlineHighlight && mVisible ) ? mColorOutlineHighlight : mColorClear );
-    for( int i = data.size(); i < 17982; i++ )
+    for( int i = data.size(); i < 3996; i++ )
     {
         data.emplace_back( RenderData() );
     }
@@ -244,12 +289,7 @@ std::vector<RenderData> BSplineEditor::render()
 
 void BSplineEditor::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color )
 {
-    for( auto it : mControlPoints )
-    {
-        vec2 curr = map( it );
-        addPoint( data, color, curr, 6.0 );
-    }
-    addPointGrid( data, color, mHitRect, 8  );
+    addPointGrid( data, color, mHitRect, 16 );
     Control::drawOutline( data, color );
 }
 
@@ -260,7 +300,8 @@ void BSplineEditor::drawOutlineHighlight( std::vector<RenderData> &data, const c
 
 void BSplineEditor::drawFill( std::vector<RenderData> &data, const ci::ColorA &color )
 {
-    if( mSplineRef != nullptr && mValid )
+    bool valid = mSplineRef != nullptr && mValid;
+    if( valid )
     {
         vec2 last = vec2( 0.0 );
         vec2 curr = vec2( 0.0 );
@@ -284,7 +325,17 @@ void BSplineEditor::drawFill( std::vector<RenderData> &data, const ci::ColorA &c
     
     if( mHitIndex != -1 )
     {
-        addPoint( data, ColorA(1.0, 0.0, 0.0, 1.0), map( mControlPoints[mHitIndex] ), 4.0 );
+        addPoint( data, ColorA( 1.0, 0.0, 0.0, 1.0 ), map( mControlPoints[mHitIndex] ), 4.0 );
+    }
+    else
+    {
+        addPoint( data, mColorClear, vec2( 0.0 ), 4.0 );
+    }
+    
+    if( mFormat.mShowTimePoint && valid )
+    {
+        addPoint( data, ColorA( 1.0, 0.0, 0.0, color.a ), map( mSplineRef->getPosition( mFormat.mTimePoint ) ), 4.0 );
+        
     }
     else
     {
@@ -311,19 +362,29 @@ void BSplineEditor::input( const ci::app::MouseEvent& event )
         hp.y = ceil( hp.y / mFormat.mStickyValue ) * mFormat.mStickyValue;
     }
     
-    if( getState() == State::NORMAL || getState() == State::OVER ) {
+    if( getState() == State::NORMAL || getState() == State::OVER )
+    {
         mHitIndex = -1;
-    } else if( mHitIndex == -1 ) {
+    }
+    else if( mHitIndex == -1 )
+    {
         float distance = 100000.0;
         int index = -1;
-        for( int i = 0; i < mControlPoints.size(); i++ )
+        std::map<float, int> distMap;
+        int totalCtrlPts = mControlPoints.size();
+        bool addToEnd = true; 
+
+        for( int i = 0; i < totalCtrlPts; i++ )
         {
             float len = length( hp - mControlPoints[i] );
+            distMap[len] = i;
             if( len < distance ) {
                 distance = len; index = i;
             }
         }
-        if( distance < ( length( mFormat.mMax - mFormat.mMin ) * mFormat.mThreshold ) ) {
+        
+        if( distance < ( length( mFormat.mMax - mFormat.mMin ) * mFormat.mThreshold ) )
+        {
             mHitIndex = index;
             if( ( event.isRight() || event.isMetaDown() ) )
             {
@@ -331,14 +392,60 @@ void BSplineEditor::input( const ci::app::MouseEvent& event )
                 updateSplineRef();
                 mHitIndex = -1;
             }
-        } else {
+            addToEnd = false;
+        }
+        else
+        {
+            float thres = 0.1 * length( mFormat.mMax - mFormat.mMin );
+            float tpp = 1.0f / float( totalCtrlPts - 1.0f );
+            float bestDistance = 1000000;
+            float bestTime = -1;
+            int bestIndex = -1;
+            if( mValid ) {
+                for( auto& it : distMap )
+                {
+                    int id = it.second;
+                    
+                    int bid = ( id > 0 ) ? ( id - 1 ) : id;
+                    int eid = ( ( id + 1 ) == totalCtrlPts ) ? id : ( id + 1 );
+                    if( bid == eid ) { continue; }
+                    float startTime = bid * tpp;
+                    float endTime = eid * tpp;
+                    
+                    for( float t = startTime; t <= endTime; t+= 0.01 )
+                    {
+                        vec2 pt = mSplineRef->getPosition( t );
+                        float d = length( hp - pt );
+                        if( d < bestDistance )
+                        {
+                            bestDistance = d;
+                            bestTime = t;
+                            bestIndex = id;
+                        }
+                    }
+                    
+                    if( bestDistance < thres ) {
+                        int insertIndex = bid + 1;
+                        if( bestTime > ( id * tpp ) ) {
+                            insertIndex = id + 1;
+                        }
+                        mControlPoints.insert( mControlPoints.begin() + insertIndex, hp );
+                        updateSplineRef();
+                        addToEnd = false;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if( addToEnd ) {
             mHitIndex = mControlPoints.size();
             mControlPoints.push_back( hp );
             updateSplineRef();
         }
     }
-    
-    if( mHitIndex != -1 ) {
+    else
+    {
         mControlPoints[mHitIndex] = hp;
         updateSplineRef();
     }

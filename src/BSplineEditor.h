@@ -22,8 +22,12 @@ public:
             mMin = glm::vec2( -1.0 );
             mMax = glm::vec2( 1.0 );
             mStickyValue = 0.05;
-            mResolution = 512;
+            mResolution = 100;
             mThreshold = 0.025;
+            mShowTimePoint = false;
+            mTimePointRef = nullptr;
+            mTimePoint = 0.0f;
+            mUseTimePointRef = false;
         }
         Format( const Format &copy ) {
             mFontSize = copy.mFontSize;
@@ -36,6 +40,10 @@ public:
             mMax = copy.mMax;
             mResolution = copy.mResolution;
             mThreshold = copy.mThreshold;
+            mShowTimePoint = copy.mShowTimePoint;
+            mTimePointRef = copy.mTimePointRef;
+            mTimePoint = copy.mTimePoint;
+            mUseTimePointRef = copy.mUseTimePointRef;
         }
         Format&	fontSize( FontSize fontSize ) { mFontSize = fontSize; return *this; }
         Format&	label( bool label ) { mLabel = label; return *this; }
@@ -47,13 +55,17 @@ public:
         Format& stickyValue( float value ) { mStickyValue = value; return *this; }
         Format& threshold( float threshold ) { mThreshold = threshold; return *this; }
         Format& resolution( int resolution ) { mResolution = resolution; return *this; }
+        Format& showTimePoint( bool showTimePoint ) { mShowTimePoint = showTimePoint; return *this; }
+        Format& setTimePointRef( float *timePointRef ) { mUseTimePointRef = true; mShowTimePoint = true; mTimePointRef = timePointRef; mTimePoint = *timePointRef; return *this; }
     protected:
         glm::vec2 mMin, mMax;
         int mResolution;
+        float *mTimePointRef;
+        float mTimePoint;
         float mHeight;
         float mThreshold;
         float mStickyValue;
-        bool mLabel, mSticky, mOptions;
+        bool mLabel, mSticky, mOptions, mShowTimePoint, mUseTimePointRef;
         FontSize mFontSize;
         friend class BSplineEditor;
         friend class Canvas;
@@ -78,6 +90,11 @@ public:
     void setDegree( int degree );
     void setLoop( bool loop );
     void setOpen( bool open );
+    
+    void setShowTimePoint( bool showTimePoint = true );
+    void setTimePoint( float timePoint );
+    void setTimePointRef( float* timePointRef );
+
     bool isValid();
     
     void updateSplineRef( bool force = false );
@@ -99,6 +116,7 @@ public:
     
 protected:
     void setup() override;
+    void update() override;    
     void trigger( bool recursive = false ) override;
     
     bool isSaveable() override { return true; }
