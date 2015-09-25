@@ -354,7 +354,7 @@ ViewRef Canvas::addSubViewEastOf( ViewRef subView, std::string referenceName, bo
 
 void Canvas::enableUpdateCallback()
 {
-    mPostDrawCb = mWindowRef->getSignalPostDraw().connect( [this]() {
+    mPostDrawCb = mWindowRef->getSignalPostDraw().connect( [ this ] () {
         update();
         draw();
     } );
@@ -529,6 +529,14 @@ void Canvas::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color
     addBoundsOutline( data, color );
 }
 
+QuaternionOrdererRef Canvas::addQuaternionOrderer( const std::string name, const QuaternionOrderer::Format& format )
+{
+    QuaternionOrdererRef ref = QuaternionOrderer::create( name, format );
+    float w = getWidth() - mPadding.mLeft - mPadding.mRight;
+    ref->setSize( vec2( w, format.mHeight < 0.0f ? w : format.mHeight ) );
+    addSubViewPosition( ref, mDirection, mAlignment );
+    return ref;
+}
 
 BSplineEditorRef Canvas::addBSplineEditor( const std::string name, BSpline2f spline, BSplineEditor::Format format )
 {

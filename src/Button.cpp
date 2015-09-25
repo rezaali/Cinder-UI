@@ -120,8 +120,15 @@ void Button::setup()
 
             case Alignment::CENTER:
             {
-                labelPosition = vec2( mPadding.mLeft, mPadding.mTop );
-                setSize( mLabelRef->getSize() + vec2( mPadding.mLeft + mPadding.mRight, mPadding.mTop + mPadding.mBottom ) );
+                vec2 ls = mLabelRef->getSize();
+                vec2 sz = getSize();
+                if( ls.x > sz.x || ls.y > sz.y ) {
+                    labelPosition = vec2( mPadding.mLeft, mPadding.mTop );
+                    setSize( ls + vec2( mPadding.mLeft + mPadding.mRight, mPadding.mTop + mPadding.mBottom ) );
+                }
+                else {
+                    labelPosition = ( sz - ls ) * 0.5f;
+                }
             }
                 break;
 

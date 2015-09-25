@@ -23,11 +23,11 @@ public:
             mMax = glm::vec2( 1.0 );
             mStickyValue = 0.05;
             mResolution = 100;
-            mThreshold = 0.025;
-            mShowTimePoint = false;
-            mTimePointRef = nullptr;
-            mTimePoint = 0.0f;
-            mUseTimePointRef = false;
+            mThreshold = 0.05;
+            mShowTime = false;
+            mTimeRef = nullptr;
+            mTime = 0.0f;
+            mUseTimeRef = false;
         }
         Format( const Format &copy ) {
             mFontSize = copy.mFontSize;
@@ -40,10 +40,10 @@ public:
             mMax = copy.mMax;
             mResolution = copy.mResolution;
             mThreshold = copy.mThreshold;
-            mShowTimePoint = copy.mShowTimePoint;
-            mTimePointRef = copy.mTimePointRef;
-            mTimePoint = copy.mTimePoint;
-            mUseTimePointRef = copy.mUseTimePointRef;
+            mShowTime = copy.mShowTime;
+            mTimeRef = copy.mTimeRef;
+            mTime = copy.mTime;
+            mUseTimeRef = copy.mUseTimeRef;
         }
         Format&	fontSize( FontSize fontSize ) { mFontSize = fontSize; return *this; }
         Format&	label( bool label ) { mLabel = label; return *this; }
@@ -55,17 +55,24 @@ public:
         Format& stickyValue( float value ) { mStickyValue = value; return *this; }
         Format& threshold( float threshold ) { mThreshold = threshold; return *this; }
         Format& resolution( int resolution ) { mResolution = resolution; return *this; }
-        Format& showTimePoint( bool showTimePoint ) { mShowTimePoint = showTimePoint; return *this; }
-        Format& setTimePointRef( float *timePointRef ) { mUseTimePointRef = true; mShowTimePoint = true; mTimePointRef = timePointRef; mTimePoint = *timePointRef; return *this; }
+        Format& showTime( bool showTime ) { mShowTime = showTime; return *this; }
+        Format& setTimeRef( float *TimeRef ) { mUseTimeRef = true; mShowTime = true; mTimeRef = TimeRef; mTime = *TimeRef; return *this; }
+        
+        float getHeight() const { return mHeight; }
+        glm::vec2 getMax() const { return mMax; }
+        glm::vec2 getMin() const { return mMin; }
+        
     protected:
         glm::vec2 mMin, mMax;
         int mResolution;
-        float *mTimePointRef;
-        float mTimePoint;
+        float *mTimeRef;
+        float mTime;
+        bool mShowTime;
+        bool mUseTimeRef;
         float mHeight;
         float mThreshold;
         float mStickyValue;
-        bool mLabel, mSticky, mOptions, mShowTimePoint, mUseTimePointRef;
+        bool mLabel, mSticky, mOptions;
         FontSize mFontSize;
         friend class BSplineEditor;
         friend class Canvas;
@@ -91,9 +98,9 @@ public:
     void setLoop( bool loop );
     void setOpen( bool open );
     
-    void setShowTimePoint( bool showTimePoint = true );
-    void setTimePoint( float timePoint );
-    void setTimePointRef( float* timePointRef );
+    void setShowTime( bool showTime = true );
+    void setTime( float Time );
+    void setTimeRef( float* TimeRef );
 
     bool isValid();
     
@@ -137,9 +144,6 @@ protected:
     virtual void mouseMove( ci::app::MouseEvent &event ) override;
     virtual void mouseDrag( ci::app::MouseEvent &event ) override;
     
-    virtual void keyDown( ci::app::KeyEvent &event ) override;
-    virtual void keyUp( ci::app::KeyEvent &event ) override;
-
     ci::vec2 map( const ci::vec2& pt );
     ci::vec2 norm( const ci::vec2& pt );
     ci::vec2 expand( const ci::vec2& pt );
@@ -149,7 +153,6 @@ protected:
     bool mLoop;
     bool mOpen;    
     bool mValid;
-    bool mStickyEnabled;
     ci::BSpline2f *mSplineRef;
     int mHitIndex = -1;
     std::vector<ci::vec2> mControlPoints;

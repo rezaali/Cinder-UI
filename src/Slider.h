@@ -83,7 +83,7 @@ protected:
     void drawFill( std::vector<RenderData> &data, const ci::ColorA &color ) override; 
     void drawFillHighlight( std::vector<RenderData> &data, const ci::ColorA &color ) override;
 
-    virtual void input( const glm::vec2 &pt );
+    virtual void input( ci::app::MouseEvent &event );
     
     virtual void mouseDown( ci::app::MouseEvent &event ) override;
     virtual void mouseUp( ci::app::MouseEvent &event ) override;
@@ -98,11 +98,8 @@ protected:
     T mMax;
     double mValue;
     T *mValueRef;
-    bool mUseRef;
-    
+    bool mUseRef;    
     Format mFormat;
-    bool mStickyEnabled;
-    
     std::function<void(T)> mCallbackFn;
 };
     

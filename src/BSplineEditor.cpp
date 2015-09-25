@@ -4,7 +4,7 @@ using namespace reza::ui;
 using namespace cinder;
 using namespace std;
 
-BSplineEditor::BSplineEditor( string name, BSpline2f spline, const Format &format ) : ControlWithLabel(), mUseRef( false ), mSplineRef( new BSpline2f( spline ) ), mCallbackFn( nullptr ), mStickyEnabled( false ), mFormat( format )
+BSplineEditor::BSplineEditor( string name, BSpline2f spline, const Format &format ) : ControlWithLabel(), mUseRef( false ), mSplineRef( new BSpline2f( spline ) ), mCallbackFn( nullptr ), mFormat( format )
 {
     setName( name );
     setSpline( spline );
@@ -17,9 +17,9 @@ BSplineEditor::~BSplineEditor()
         delete mSplineRef;
     }
     
-    if( !mFormat.mUseTimePointRef )
+    if( !mFormat.mUseTimeRef )
     {
-        delete mFormat.mTimePointRef;
+        delete mFormat.mTimeRef;
     }
 }
 
@@ -31,21 +31,21 @@ void BSplineEditor::setup()
         mLabelRef->setOrigin( vec2( 0.0f, getHeight() ) );
         addSubView( mLabelRef );
     }
-    if( !mFormat.mTimePointRef )
+    if( !mFormat.mTimeRef )
     {
-        mFormat.mTimePointRef = new float( mFormat.mTimePoint );
+        mFormat.mTimeRef = new float( mFormat.mTime );
     }
     View::setup();
 }
 
 void BSplineEditor::update()
 {
-    if( mFormat.mShowTimePoint && mFormat.mUseTimePointRef && mVisible )
+    if( mFormat.mShowTime && mFormat.mUseTimeRef && mVisible )
     {
-        float time = *mFormat.mTimePointRef;
-        if( time != mFormat.mTimePoint )
+        float time = *mFormat.mTimeRef;
+        if( time != mFormat.mTime )
         {
-            mFormat.mTimePoint = time;
+            mFormat.mTime = time;
             setNeedsDisplay();
         }
     }
@@ -183,26 +183,26 @@ void BSplineEditor::setOpen( bool open )
     }
 }
 
-void BSplineEditor::setShowTimePoint( bool showTimePoint )
+void BSplineEditor::setShowTime( bool showTime )
 {
-    mFormat.mShowTimePoint = showTimePoint;
+    mFormat.mShowTime = showTime;
 }
 
-void BSplineEditor::setTimePoint( float timePoint )
+void BSplineEditor::setTime( float Time )
 {
-    setShowTimePoint( true );
-    *mFormat.mTimePointRef = timePoint;
+    setShowTime( true );
+    *mFormat.mTimeRef = Time;
 }
 
-void BSplineEditor::setTimePointRef( float* timePointRef )
+void BSplineEditor::setTimeRef( float* TimeRef )
 {
-    setShowTimePoint( true );
-    if( !mFormat.mUseTimePointRef )
+    setShowTime( true );
+    if( !mFormat.mUseTimeRef )
     {
-        delete mFormat.mTimePointRef;
-        mFormat.mUseTimePointRef = true;
+        delete mFormat.mTimeRef;
+        mFormat.mUseTimeRef = true;
     }
-    mFormat.mTimePointRef = timePointRef;
+    mFormat.mTimeRef = TimeRef;
 }
 
 void BSplineEditor::updateSplineRef( bool force )
@@ -259,8 +259,10 @@ void BSplineEditor::setMinAndMax( vec2 min, vec2 max, bool keepValueTheSame )
     {
         for( auto &it : mControlPoints )
         {
-            it.x = lmap<float>( it.x, mFormat.mMin.x, mFormat.mMax.x, min.x, max.x );
-            it.y = lmap<float>( it.y, mFormat.mMin.y, mFormat.mMax.y, min.y, max.y );
+            float x = lmap<float>( it.x, mFormat.mMin.x, mFormat.mMax.x, min.x, max.x );
+            float y = lmap<float>( it.y, mFormat.mMin.y, mFormat.mMax.y, min.y, max.y );
+            it.x = isnan( x ) ? it.x : x;
+            it.y = isnan( y ) ? it.y : y;
         }
         updateSplineRef();
         trigger();
@@ -289,7 +291,7 @@ std::vector<RenderData> BSplineEditor::render()
 
 void BSplineEditor::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color )
 {
-    addPointGrid( data, color, mHitRect, 16 );
+//    addPointGrid( data, color, mHitRect, 16 );
     Control::drawOutline( data, color );
 }
 
@@ -332,9 +334,9 @@ void BSplineEditor::drawFill( std::vector<RenderData> &data, const ci::ColorA &c
         addPoint( data, mColorClear, vec2( 0.0 ), 4.0 );
     }
     
-    if( mFormat.mShowTimePoint && valid )
+    if( mFormat.mShowTime && valid )
     {
-        addPoint( data, ColorA( 1.0, 0.0, 0.0, color.a ), map( mSplineRef->getPosition( mFormat.mTimePoint ) ), 4.0 );
+        addPoint( data, ColorA( 1.0, 0.0, 0.0, color.a ), map( mSplineRef->getPosition( mFormat.mTime ) ), 4.0 );
         
     }
     else
@@ -356,7 +358,7 @@ void BSplineEditor::input( const ci::app::MouseEvent& event )
     hp = vec2( lmap<float>( hp.x, 0.0, 1.0, mFormat.mMin.x, mFormat.mMax.x ),
               lmap<float>( hp.y, 0.0, 1.0, mFormat.mMin.y, mFormat.mMax.y ) );
     
-    if( mStickyEnabled || mFormat.mSticky )
+    if( event.isMetaDown() || mFormat.mSticky )
     {
         hp.x = ceil( hp.x / mFormat.mStickyValue ) * mFormat.mStickyValue;
         hp.y = ceil( hp.y / mFormat.mStickyValue ) * mFormat.mStickyValue;
@@ -533,20 +535,6 @@ void BSplineEditor::mouseDrag( ci::app::MouseEvent &event )
     {
         setState( State::NORMAL );
     }
-}
-
-void BSplineEditor::keyDown( ci::app::KeyEvent &event )
-{
-    if( event.isShiftDown() )
-    {
-        mStickyEnabled = true;
-    }
-}
-
-
-void BSplineEditor::keyUp( ci::app::KeyEvent &event )
-{
-    mStickyEnabled = false;
 }
 
 bool BSplineEditor::isValid()

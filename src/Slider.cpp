@@ -6,14 +6,14 @@ using namespace cinder;
 using namespace std;
 
 template<typename T>
-SliderT<T>::SliderT( string name, T value, T min, T max, Format format ) : ControlWithLabel(), mUseRef(false), mValueRef(new T(value)), mMin(min), mMax(max), mCallbackFn(nullptr), mFormat(format), mStickyEnabled(false)
+SliderT<T>::SliderT( string name, T value, T min, T max, Format format ) : ControlWithLabel(), mUseRef(false), mValueRef(new T(value)), mMin(min), mMax(max), mCallbackFn(nullptr), mFormat(format)
 {
     setName( name );
     setValue( value );
 }
 
 template<typename T>
-SliderT<T>::SliderT( std::string name, T *value, T min, T max, Format format ) : ControlWithLabel(), mUseRef(true), mValueRef(value), mMin(min), mMax(max), mCallbackFn(nullptr), mFormat(format), mStickyEnabled(false)
+SliderT<T>::SliderT( std::string name, T *value, T min, T max, Format format ) : ControlWithLabel(), mUseRef(true), mValueRef(value), mMin(min), mMax(max), mCallbackFn(nullptr), mFormat(format)
 {
     setName( name );
     setValue( *value );
@@ -86,11 +86,6 @@ void SliderT<T>::load( const ci::JsonTree &data )
 template<typename T>
 void SliderT<T>::setValue( T value )
 {
-    if( mStickyEnabled || mFormat.mSticky )
-    {
-        value = ceil( value / mFormat.mStickyValue ) * mFormat.mStickyValue;
-    }
-    
     mValue = lmap<double>( value, mMin, mMax, 0.0, 1.0 );
     updateValueRef();
     updateLabel();
@@ -207,11 +202,18 @@ void SliderT<T>::drawFillHighlight( std::vector<RenderData> &data, const ci::Col
 }
 
 template<typename T>
-void SliderT<T>::input( const glm::vec2 &pt )
+void SliderT<T>::input( ci::app::MouseEvent &event )
 {
-    vec2 hp = getHitPercent( pt );
+    vec2 hp = getHitPercent( event.getPos() );
     hp.x = min( max( hp.x, 0.0f ), 1.0f );
-    setValue( lmap<double>( hp.x, 0.0, 1.0, mMin, mMax ) );
+
+    float value = lmap<double>( hp.x, 0.0, 1.0, mMin, mMax );
+    if( mFormat.mSticky || event.isMetaDown() )
+    {
+        value = ceil( value / mFormat.mStickyValue ) * mFormat.mStickyValue;
+    }
+    
+    setValue( value );
 }
 
 template<typename T>
@@ -222,7 +224,7 @@ void SliderT<T>::mouseDown( ci::app::MouseEvent &event )
     {
         mHit = true;
         setState( State::DOWN );
-        input( event.getPos() );
+        input( event );
         if( (int)mTrigger & (int)Trigger::BEGIN )
         {
             trigger();
@@ -284,7 +286,7 @@ void SliderT<T>::mouseDrag( ci::app::MouseEvent &event )
     if( mHit )
     {
         setState( State::DOWN );
-        input( event.getPos() );
+        input( event );
         if( (int)mTrigger & (int)Trigger::CHANGE )
         {
             trigger();
@@ -299,16 +301,13 @@ void SliderT<T>::mouseDrag( ci::app::MouseEvent &event )
 template<typename T>
 void SliderT<T>::keyDown( ci::app::KeyEvent &event )
 {
-    if( event.isShiftDown() )
-    {
-        mStickyEnabled = true;
-    }
+   
 }
 
 template<typename T>
 void SliderT<T>::keyUp( ci::app::KeyEvent &event )
 {
-    mStickyEnabled = false;
+
 }
 
 template class reza::ui::SliderT<int>;
