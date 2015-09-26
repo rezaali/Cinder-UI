@@ -26,20 +26,6 @@ QuaternionOrderer::~QuaternionOrderer()
 
 void QuaternionOrderer::setup()
 {
-    ci::quat q0, q1, q2, q3, q4, q5;
-    mTimes = { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
-    mQuats = { q0, q1, q2, q3, q4, q5 };
-    
-    float angle = M_PI;
-    float index = 0;
-    float size = mQuats.size() - 1;
-    for( auto& it : mQuats )
-    {
-        float v = index / size;
-        it = glm::angleAxis( v * angle, normalize( vec3( 0.0, index / size, -1.0 ) ) );
-        index++;
-    }
-    
     if( !mLabelRef && mFormat.mLabel )
     {
         mLabelRef = Label::create( mName + "_LABEL", mName, mFormat.mFontSize );
@@ -249,56 +235,81 @@ quat QuaternionOrderer::getQuat( float time )
         return mQuats[0];
     }
     else if( mQuats.size() > 1 ) {
+        
+        
+        map<float, quat> quatMap;
+        for( int i = 0; i < mQuats.size(); i++ ) {
+            quatMap[mTimes[i]] = mQuats[i];
+        }
+        
+        vector<float> times;
+        vector<quat> quats;
+        
+        for( auto &it : quatMap )
+        {
+            times.emplace_back(it.first );
+            quats.emplace_back( it.second );
+        }
+        
         float t = time;
         if( t > 1.0 ) { t = ci::fract( t ); }
         int bi = -1;
         float bd = 1000;
-        for( int i = 0; i < mTimes.size(); i++ ) {
-            float d = fabsf( mTimes[i] - t );
+        
+        for( int i = 0; i < times.size(); i++ ) {
+            float d = fabsf( times[i] - t );
             if( d < bd ) {
                 bd = d;
                 bi = i;
             }
         }
         
-        if( mTimes[bi] == t ) {
-            return mQuats[bi];
+        if( times[bi] == t ) {
+            return quats[bi];
         }
-        else if( t > mTimes[bi] ) {
+        else if( t > times[bi] ) {
             int leftIndex = bi;
-            float st = mTimes[leftIndex];
+            float st = times[leftIndex];
             
             int rightIndex = ( bi + 1 );
             float et = 0;
-            if( rightIndex == mTimes.size() ) {
+            if( rightIndex == times.size() ) {
                 rightIndex = 0;
-                et = mTimes[rightIndex];
+                et = times[rightIndex];
                 et += 1.0f;
             }
             else {
-                et = mTimes[rightIndex];
+                et = times[rightIndex];
             }
             float nt = lmap<float>( t, st, et, 0.0, 1.0 );
-            return glm::slerp( mQuats[leftIndex], mQuats[rightIndex], mEasingFn( nt ) );
+            return glm::slerp( quats[leftIndex], quats[rightIndex], mEasingFn( nt ) );
         }
-        else if( t < mTimes[bi] ) {
+        else if( t < times[bi] ) {
             int rightIndex = bi;
-            float et = mTimes[rightIndex];
+            float et = times[rightIndex];
             int leftIndex = bi - 1;
             float st = 0;
             if( leftIndex == -1 ) {
-                leftIndex = mTimes.size() - 1;
-                st = mTimes[leftIndex];
+                leftIndex = times.size() - 1;
+                st = times[leftIndex];
                 st -= 1.0f;
             }
             else {
-                st = mTimes[leftIndex];
+                st = times[leftIndex];
             }
             float nt = lmap<float>( t, st, et, 0.0, 1.0 );
-            return glm::slerp( mQuats[leftIndex], mQuats[rightIndex], mEasingFn( nt ) );
+            return glm::slerp( quats[leftIndex], quats[rightIndex], mEasingFn( nt ) );
         }
     }
     return quat();
+}
+
+void QuaternionOrderer::reset()
+{
+    mHitIndex = -1;
+    mQuats.clear();
+    mTimes.clear();
+    setNeedsDisplay();
 }
 
 void QuaternionOrderer::input( const ci::app::MouseEvent& event )

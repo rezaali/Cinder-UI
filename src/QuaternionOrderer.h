@@ -74,6 +74,8 @@ public:
     void addQuat( float time, ci::quat quat );
     ci::quat getQuat( float time );
     
+    void reset(); 
+    
     virtual ~QuaternionOrderer();
     
 protected:
