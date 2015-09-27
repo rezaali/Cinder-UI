@@ -117,11 +117,11 @@ public:
     
     bool isDraggable() override { return true; }
     
+    virtual ~BSplineEditor();    
+protected:
     BSplineEditor( std::string name, ci::BSpline2f spline, const Format &format = Format() );
     BSplineEditor( std::string name, ci::BSpline2f *spline, const Format &format = Format() );
-    virtual ~BSplineEditor();
     
-protected:
     void setup() override;
     void update() override;    
     void trigger( bool recursive = false ) override;
