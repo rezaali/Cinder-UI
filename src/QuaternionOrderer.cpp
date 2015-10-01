@@ -128,7 +128,7 @@ std::vector<RenderData> QuaternionOrderer::render()
     drawFillHighlight( data, ( mDrawFillHighlight && mVisible ) ? mColorFillHighlight : mColorClear );
     drawOutline( data, ( mDrawOutline && mVisible ) ? mColorOutline : mColorClear );
     drawOutlineHighlight( data, ( mDrawOutlineHighlight && mVisible ) ? mColorOutlineHighlight : mColorClear );
-    for( int i = data.size(); i < 1998; i++ )
+    for( int i = data.size(); i < 5994; i++ )
     {
         data.emplace_back( RenderData() );
     }
