@@ -77,10 +77,6 @@ void QuaternionOrderer::drawFill( std::vector<RenderData> &data, const ci::Color
         qz = lmap<float>( it.second.z, -1.0, 1.0, lr.y, ul.y );
         qw = lmap<float>( it.second.w, -1.0, 1.0, lr.y, ul.y );
         addLine( data, color, vec2( x, ul.y ), vec2( x, lr.y ) );
-        addPoint( data, color, vec2( x, qx ), 2 );
-        addPoint( data, color, vec2( x, qy ), 2 );
-        addPoint( data, color, vec2( x, qz ), 2 );
-        addPoint( data, color, vec2( x, qw ), 2 );        
         
         if( index > 0 )
         {

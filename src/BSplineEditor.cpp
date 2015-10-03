@@ -322,26 +322,26 @@ void BSplineEditor::drawFill( std::vector<RenderData> &data, const ci::ColorA &c
     for( auto it : mControlPoints )
     {
         vec2 curr = map( it );
-        addPoint( data, color, curr, 3.0 );
+        addPoint( data, color, curr, 2.0 );
     }
     
     if( mHitIndex != -1 )
     {
-        addPoint( data, ColorA( 1.0, 0.0, 0.0, 1.0 ), map( mControlPoints[mHitIndex] ), 4.0 );
+        addPoint( data, ColorA( 1.0, 0.0, 0.0, 1.0 ), map( mControlPoints[mHitIndex] ), 3.0 );
     }
     else
     {
-        addPoint( data, mColorClear, vec2( 0.0 ), 4.0 );
+        addPoint( data, mColorClear, vec2( 0.0 ) );
     }
     
     if( mFormat.mShowTime && valid )
     {
-        addPoint( data, ColorA( 1.0, 0.0, 0.0, color.a ), map( mSplineRef->getPosition( mFormat.mTime ) ), 4.0 );
+        addPoint( data, ColorA( 1.0, 0.0, 0.0, color.a ), map( mSplineRef->getPosition( mFormat.mTime ) ), 3.0 );
         
     }
     else
     {
-        addPoint( data, mColorClear, vec2( 0.0 ), 4.0 );
+        addPoint( data, mColorClear, vec2( 0.0 ) );
     }
 }
 
