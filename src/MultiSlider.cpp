@@ -174,8 +174,10 @@ void MultiSlider::load( const ci::JsonTree &data )
         {
             setValue( it.mKey, data.getValueForKey<float>( it.mKey ) );
         }
+        mHitKey = it.mKey;
         trigger(); 
     }
+    mHitKey = "";
     View::load( data );
 }
 
