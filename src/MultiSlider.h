@@ -36,7 +36,8 @@ public:
     }
     
     const std::string getType() override { return "MultiSlider"; }
-    
+
+    void setValue( float value );
     void setValue( const std::string key, float value );
     float getValue( const std::string key );
     float getNormalizedValue( const std::string key );
@@ -76,7 +77,7 @@ protected:
     void drawFillHighlight( std::vector<RenderData> &data, const ci::ColorA &color ) override;
     
     virtual std::string getKey( const glm::vec2 &pt );
-    virtual void input( const glm::vec2 &pt );
+    virtual void input( ci::app::MouseEvent& event );
     
     virtual void mouseDown( ci::app::MouseEvent &event ) override;
     virtual void mouseUp( ci::app::MouseEvent &event ) override;

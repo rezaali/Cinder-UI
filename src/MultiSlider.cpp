@@ -63,6 +63,14 @@ void MultiSlider::update()
     View::update();
 }
 
+void MultiSlider::setValue( float value )
+{
+    for( auto& it : mDataMap ) {
+        Data *data = it.second;
+        setValue( it.first, lmap<double>( value, 0.0, 1.0, data->mMin, data->mMax ) );
+    }
+}
+
 void MultiSlider::setValue( const std::string key, float value )
 {
     Data *data = mDataMap[key];
@@ -272,15 +280,23 @@ std::string MultiSlider::getKey( const glm::vec2 &pt )
     return "";
 }
 
-void MultiSlider::input( const glm::vec2 &pt )
+void MultiSlider::input( ci::app::MouseEvent& event )
 {
-    vec2 hp = getHitPercent( pt );
+    vec2 pt = event.getPos();
+    vec2 hp = getHitPercent( event.getPos() );
     hp.x = min( max( hp.x, 0.0f ), 1.0f );
+    
+    if( event.isMetaDown() ) {
+        setValue( hp.x );
+        return;
+    }
+    
     if( mHitKey == "" )
     {
         mHitKey = getKey( pt );
         mHoverKey = "";
     }
+    
     if( mHitKey != "" )
     {
         setValue( mHitKey, lmap<double>( hp.x, 0.0, 1.0, mDataMap[mHitKey]->mMin, mDataMap[mHitKey]->mMax ) );
@@ -293,7 +309,7 @@ void MultiSlider::mouseDown( ci::app::MouseEvent &event )
     {
         mHit = true;
         setState( State::DOWN );
-        input( event.getPos() );
+        input( event );
         if( (int)mTrigger & (int)Trigger::BEGIN )
         {
             trigger();
@@ -367,7 +383,7 @@ void MultiSlider::mouseDrag( ci::app::MouseEvent &event )
     if( mHit )
     {
         setState( State::DOWN );
-        input( event.getPos() );
+        input( event );
         if( (int)mTrigger & (int)Trigger::CHANGE )
         {
             trigger();

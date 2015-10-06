@@ -20,7 +20,7 @@ void Toggle::load( const ci::JsonTree &data )
 {
     if( data.hasChild( "VALUE" ) )
     {
-        setValue( data.getValueForKey<bool>("VALUE") );
+        setValue( data.getValueForKey<bool>( "VALUE" ) );
         trigger( true );
     }
     View::load( data );

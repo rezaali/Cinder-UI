@@ -16,7 +16,7 @@ typedef std::weak_ptr<class View> ViewWeakRef;
     
 class View : public Responder , public std::enable_shared_from_this<class View>
 {
-public:
+public:    
     virtual ~View();
     
     const std::string getType() override { return "View"; }
