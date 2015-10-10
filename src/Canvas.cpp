@@ -369,6 +369,10 @@ void Canvas::draw()
     if( !mGlslProgRef ) {
         setupShader();
     } else {
+        
+        gl::ScopedDepthTest scpDrd( false );
+        gl::ScopedDepthWrite scpDwt( false );
+        gl::ScopedBlendAlpha scpAlp;
         gl::pushMatrices();
         gl::setMatricesWindow( app::getWindowWidth(), app::getWindowHeight() );
         
