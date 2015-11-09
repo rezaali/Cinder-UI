@@ -106,13 +106,13 @@ public:
     virtual void keyUp( ci::app::KeyEvent &event );
 #endif
     
-    ViewRef getSubView( std::string subViewName );
+    ViewRef getSubView( std::string subViewName, int subViewID = -1 );
     
 protected:
     View();
     ViewWeakRef mSuperView;
     std::vector<ViewRef> mSubViews;
-    std::map<std::string, ViewRef>      mSubViewsNameMap;
+    std::multimap<std::string, ViewRef> mSubViewsNameMap;
     
     std::vector<RenderData> mViewRenderData;
     std::vector<RenderData> mRenderData;

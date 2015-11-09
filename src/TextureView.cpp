@@ -28,7 +28,7 @@ void TextureView::draw()
     if( mFormat.mHeight > 0 ) {
         rect.y2 = rect.y1 + mFormat.mHeight;
     }
-    if( mTextureRef ) {
+    if( mTextureRef ) {        
         gl::draw( mTextureRef, rect );
     }
     Control::draw();
