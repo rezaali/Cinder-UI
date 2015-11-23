@@ -533,6 +533,15 @@ void Canvas::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color
     addBoundsOutline( data, color );
 }
 
+EnvelopeRef Canvas::addEnvelope( const std::string name, const Envelope::Format& format )
+{
+    EnvelopeRef ref = Envelope::create( name, format );
+    float w = getWidth() - mPadding.mLeft - mPadding.mRight;
+    ref->setSize( vec2( w, format.mHeight < 0.0f ? w : format.mHeight ) );
+    addSubViewPosition( ref, mDirection, mAlignment );
+    return ref;
+}
+
 QuaternionOrdererRef Canvas::addQuaternionOrderer( const std::string name, const QuaternionOrderer::Format& format )
 {
     QuaternionOrdererRef ref = QuaternionOrderer::create( name, format );

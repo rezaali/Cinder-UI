@@ -21,3 +21,4 @@
 #include "ColorPicker.h"
 #include "BSplineEditor.h"
 #include "QuaternionOrderer.h"
+#include "Envelope.h"

@@ -12,27 +12,22 @@ BSplineEditor::BSplineEditor( string name, BSpline2f spline, const Format &forma
 
 BSplineEditor::~BSplineEditor()
 {
-    if( !mUseRef )
-    {
+    if( !mUseRef ) {
         delete mSplineRef;
     }
-    
-    if( !mFormat.mUseTimeRef )
-    {
+    if( !mFormat.mUseTimeRef ) {
         delete mFormat.mTimeRef;
     }
 }
 
 void BSplineEditor::setup()
 {
-    if( !mLabelRef && mFormat.mLabel )
-    {
+    if( !mLabelRef && mFormat.mLabel ) {
         mLabelRef = Label::create( mName + "_LABEL", mName, mFormat.mFontSize );
         mLabelRef->setOrigin( vec2( 0.0f, getHeight() ) );
         addSubView( mLabelRef );
     }
-    if( !mFormat.mTimeRef )
-    {
+    if( !mFormat.mTimeRef ) {
         mFormat.mTimeRef = new float( mFormat.mTime );
     }
     View::setup();
@@ -40,11 +35,9 @@ void BSplineEditor::setup()
 
 void BSplineEditor::update()
 {
-    if( mFormat.mShowTime && mFormat.mUseTimeRef && mVisible )
-    {
+    if( mFormat.mShowTime && mFormat.mUseTimeRef && mVisible ) {
         float time = *mFormat.mTimeRef;
-        if( time != mFormat.mTime )
-        {
+        if( time != mFormat.mTime ) {
             mFormat.mTime = time;
             setNeedsDisplay();
         }
@@ -54,8 +47,7 @@ void BSplineEditor::update()
 
 void BSplineEditor::trigger( bool recursive )
 {
-    if( mCallbackFn )
-    {
+    if( mCallbackFn ) {
         mCallbackFn( getSpline() );
     }
     Control::trigger( recursive );
@@ -65,16 +57,14 @@ JsonTree BSplineEditor::save()
 {
     JsonTree tree = View::save();
     JsonTree subtree = JsonTree::makeArray( "POINTS" );
-    for( auto& it : mControlPoints )
-    {
+    for( auto& it : mControlPoints ) {
         vec2 mapped = norm( it );
         JsonTree subsubtree;
         subsubtree.addChild( JsonTree( "X", mapped.x ) );
         subsubtree.addChild( JsonTree( "Y", mapped.y ) );
         subtree.addChild( subsubtree );
     }
-    if( subtree.getNumChildren() )
-    {
+    if( subtree.getNumChildren() ) {
         tree.addChild( subtree );
     }
     return tree;
@@ -83,16 +73,13 @@ JsonTree BSplineEditor::save()
 void BSplineEditor::load( const ci::JsonTree &data )
 {
     mControlPoints.clear(); 
-    if( data.hasChild( "POINTS" ) )
-    {
+    if( data.hasChild( "POINTS" ) ) {
         auto pts = data.getChild( "POINTS" );
         int total = pts.getNumChildren();
-        if( mControlPoints.size() < total )
-        {
+        if( mControlPoints.size() < total ) {
             mControlPoints.resize( total );
         }
-        for( int i = 0; i < total; i++ )
-        {
+        for( int i = 0; i < total; i++ ) {
             auto child = pts.getChild( i );
             mControlPoints[i] = expand( vec2( child.getValueForKey<float>( "X" ), child.getValueForKey<float>( "Y" ) ) ); 
         }
@@ -115,8 +102,7 @@ void BSplineEditor::setSpline( BSpline2f spline )
 
 void BSplineEditor::setSplineRef( BSpline2f *spline )
 {
-    if( !mUseRef )
-    {
+    if( !mUseRef ) {
         mUseRef = false;
         delete mSplineRef;
     }
@@ -155,8 +141,7 @@ void BSplineEditor::setProperties( int degree, bool loop, bool open )
 
 void BSplineEditor::setDegree( int degree )
 {
-    if( mDegree != degree )
-    {
+    if( mDegree != degree ) {
         mDegree = degree;
         updateSplineRef( true );
         trigger();
@@ -165,8 +150,7 @@ void BSplineEditor::setDegree( int degree )
 
 void BSplineEditor::setLoop( bool loop )
 {
-    if( mLoop != loop )
-    {
+    if( mLoop != loop ) {
         mLoop = loop;
         updateSplineRef( true );
         trigger();
@@ -175,8 +159,7 @@ void BSplineEditor::setLoop( bool loop )
 
 void BSplineEditor::setOpen( bool open )
 {
-    if( mOpen != open )
-    {
+    if( mOpen != open ) {
         mOpen = open;
         updateSplineRef( true );
         trigger();
@@ -197,8 +180,7 @@ void BSplineEditor::setTime( float Time )
 void BSplineEditor::setTimeRef( float* TimeRef )
 {
     setShowTime( true );
-    if( !mFormat.mUseTimeRef )
-    {
+    if( !mFormat.mUseTimeRef ) {
         delete mFormat.mTimeRef;
         mFormat.mUseTimeRef = true;
     }
@@ -208,21 +190,17 @@ void BSplineEditor::setTimeRef( float* TimeRef )
 void BSplineEditor::updateSplineRef( bool force )
 {
     setNeedsDisplay();
-    if( !isValid() )
-    {
+    if( !isValid() ) {
         return;
     }
     
-    if( ( mControlPoints.size() != mSplineRef->getNumControlPoints() ) || force )
-    {
+    if( ( mControlPoints.size() != mSplineRef->getNumControlPoints() ) || force ) {
         delete mSplineRef;
         mSplineRef = new BSpline2f( mControlPoints, mDegree, mLoop, mOpen );
     }
-    else
-    {
+    else {
         int total = mControlPoints.size();
-        for( int i = 0; i < total; i++ )
-        {
+        for( int i = 0; i < total; i++ ) {
             mSplineRef->setControlPoint( i, mControlPoints[i] );
         }
     }
@@ -255,10 +233,8 @@ vec2 BSplineEditor::getMin()
 
 void BSplineEditor::setMinAndMax( vec2 min, vec2 max, bool keepValueTheSame )
 {
-    if( !keepValueTheSame )
-    {
-        for( auto &it : mControlPoints )
-        {
+    if( !keepValueTheSame ) {
+        for( auto &it : mControlPoints ) {
             float x = lmap<float>( it.x, mFormat.mMin.x, mFormat.mMax.x, min.x, max.x );
             float y = lmap<float>( it.y, mFormat.mMin.y, mFormat.mMax.y, min.y, max.y );
             it.x = isnan( x ) ? it.x : x;
@@ -282,8 +258,7 @@ std::vector<RenderData> BSplineEditor::render()
     drawFillHighlight( data, ( mDrawFillHighlight && mVisible ) ? mColorFillHighlight : mColorClear );
     drawOutline( data, ( mDrawOutline && mVisible ) ? mColorOutline : mColorClear );
     drawOutlineHighlight( data, ( mDrawOutlineHighlight && mVisible ) ? mColorOutlineHighlight : mColorClear );
-    for( int i = data.size(); i < 5994; i++ )
-    {
+    for( int i = data.size(); i < 5994; i++ ) {
         data.emplace_back( RenderData() );
     }
     return data;
@@ -291,7 +266,9 @@ std::vector<RenderData> BSplineEditor::render()
 
 void BSplineEditor::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color )
 {
-//    addPointGrid( data, color, mHitRect, 16 );
+    if( mFormat.mGrid ) {
+        addPointGrid( data, color, mHitRect, mFormat.mGridSize );
+    }
     Control::drawOutline( data, color );
 }
 
@@ -303,44 +280,33 @@ void BSplineEditor::drawOutlineHighlight( std::vector<RenderData> &data, const c
 void BSplineEditor::drawFill( std::vector<RenderData> &data, const ci::ColorA &color )
 {
     bool valid = mSplineRef != nullptr && mValid;
-    if( valid )
-    {
+    if( valid ) {
         vec2 last = vec2( 0.0 );
         vec2 curr = vec2( 0.0 );
-        for( int i = 0; i <= mFormat.mResolution; ++i )
-        {
+        for( int i = 0; i <= mFormat.mResolution; ++i ) {
             float t = i / (float) mFormat.mResolution;
             curr = map( mSplineRef->getPosition( t ) );
-            if( i != 0 )
-            {
+            if( i != 0 ) {
                 addLine( data, color, last, curr );
             }
             last = curr;
         }
     }
     
-    for( auto it : mControlPoints )
-    {
+    for( auto it : mControlPoints ) {
         vec2 curr = map( it );
         addPoint( data, color, curr, 2.0 );
     }
     
-    if( mHitIndex != -1 )
-    {
+    if( mHitIndex != -1 ) {
         addPoint( data, ColorA( 1.0, 0.0, 0.0, 1.0 ), map( mControlPoints[mHitIndex] ), 3.0 );
-    }
-    else
-    {
+    } else {
         addPoint( data, mColorClear, vec2( 0.0 ) );
     }
     
-    if( mFormat.mShowTime && valid )
-    {
+    if( mFormat.mShowTime && valid ) {
         addPoint( data, ColorA( 1.0, 0.0, 0.0, color.a ), map( mSplineRef->getPosition( mFormat.mTime ) ), 3.0 );
-        
-    }
-    else
-    {
+    } else {
         addPoint( data, mColorClear, vec2( 0.0 ) );
     }
 }
@@ -358,18 +324,24 @@ void BSplineEditor::input( const ci::app::MouseEvent& event )
     hp = vec2( lmap<float>( hp.x, 0.0, 1.0, mFormat.mMin.x, mFormat.mMax.x ),
               lmap<float>( hp.y, 0.0, 1.0, mFormat.mMin.y, mFormat.mMax.y ) );
     
-    if( event.isMetaDown() || mFormat.mSticky )
-    {
-        hp.x = ceil( hp.x / mFormat.mStickyValue ) * mFormat.mStickyValue;
-        hp.y = ceil( hp.y / mFormat.mStickyValue ) * mFormat.mStickyValue;
+    if( event.isMetaDown() || mFormat.mSticky ) {
+        if( mFormat.mGrid ) {
+            float w = mHitRect.getWidth();
+            float h = mHitRect.getHeight();
+            float sv = h > w ? h : w;
+            sv = mFormat.mGridSize / sv;
+            hp.x = ceil( hp.x / sv ) * sv;
+            hp.y = ceil( hp.y / sv ) * sv;
+        } else {
+            hp.x = ceil( hp.x / mFormat.mStickyValue ) * mFormat.mStickyValue;
+            hp.y = ceil( hp.y / mFormat.mStickyValue ) * mFormat.mStickyValue;
+        }
     }
     
-    if( getState() == State::NORMAL || getState() == State::OVER )
-    {
+    if( getState() == State::NORMAL || getState() == State::OVER ) {
         mHitIndex = -1;
     }
-    else if( mHitIndex == -1 )
-    {
+    else if( mHitIndex == -1 ) {
         float distance = 100000.0;
         int index = -1;
         std::map<float, int> distMap;
