@@ -28,6 +28,8 @@ public:
             mTimeRef = nullptr;
             mTime = 0.0f;
             mUseTimeRef = false;
+            mGrid = false;
+            mGridSize = 16;
         }
         Format( const Format &copy ) {
             mFontSize = copy.mFontSize;
@@ -44,6 +46,8 @@ public:
             mTimeRef = copy.mTimeRef;
             mTime = copy.mTime;
             mUseTimeRef = copy.mUseTimeRef;
+            mGrid = copy.mGrid;
+            mGridSize = copy.mGridSize;
         }
         Format&	fontSize( FontSize fontSize ) { mFontSize = fontSize; return *this; }
         Format&	label( bool label ) { mLabel = label; return *this; }
@@ -56,6 +60,7 @@ public:
         Format& threshold( float threshold ) { mThreshold = threshold; return *this; }
         Format& resolution( int resolution ) { mResolution = resolution; return *this; }
         Format& showTime( bool showTime ) { mShowTime = showTime; return *this; }
+        Format& grid( bool showGrid = true, int size = 16 ) { mGrid = showGrid; mGridSize = size; return *this; }
         Format& setTimeRef( float *TimeRef ) { mUseTimeRef = true; mShowTime = true; mTimeRef = TimeRef; mTime = *TimeRef; return *this; }
         
         float getHeight() const { return mHeight; }
@@ -65,6 +70,8 @@ public:
     protected:
         glm::vec2 mMin, mMax;
         int mResolution;
+        bool mGrid;
+        int mGridSize;
         float *mTimeRef;
         float mTime;
         bool mShowTime;

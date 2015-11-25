@@ -11,6 +11,7 @@ public:
     struct Data
     {
         Data( std::string key, float *value, float min = 0.0f, float max = 1.0f ) : mKey(key), mValueRef(value), mMin(min), mMax(max) { mValue = ci::lmap<double>( (*mValueRef), mMin, mMax, 0.0, 1.0 ); }
+        float value() { return *mValueRef; }
         std::string mKey;
         double mValue;
         float *mValueRef;

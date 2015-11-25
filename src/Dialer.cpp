@@ -167,7 +167,7 @@ DialerT<T>* DialerT<T>::setCallback( const std::function<void(T)> &callback )
 template<typename T>
 void DialerT<T>::setMax( T max, bool keepValueTheSame )
 {
-    setMinAndMax( max, mMin, keepValueTheSame );
+    setMinAndMax( mMin, max, keepValueTheSame );
 }
 
 template<typename T>
@@ -179,7 +179,7 @@ T DialerT<T>::getMax()
 template<typename T>
 void DialerT<T>::setMin( T min, bool keepValueTheSame )
 {
-    setMinAndMax( mMax, min, keepValueTheSame );
+    setMinAndMax( min, mMax, keepValueTheSame );
 }
 
 template<typename T>

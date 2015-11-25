@@ -13,14 +13,14 @@ View::~View() { }
 
 void View::clear()
 {
+    setNeedsDisplay( this, true, true );
     mSubViewsNameMap.clear();
     mSubViews.clear();
 }
 
 bool View::isHit( const vec2 &pt )
 {
-    if( mVisible )
-    {
+    if( mVisible ) {
         Rectf r;
         r.set( 0, 0, getWidth(), getHeight() );
         r.offset( getOrigin() );
@@ -46,15 +46,12 @@ JsonTree View::save()
     tree.addChild( JsonTree( "ID", getID() ) );
     tree.addChild( JsonTree( "TYPE", getType() ) );
     JsonTree subtree = JsonTree::makeArray( "SUBVIEWS" );
-    for ( auto &it : mSubViews )
-    {
-        if( it->isSaveable() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isSaveable() ) {
             subtree.addChild( it->save() );
         }
     }
-    if( subtree.getNumChildren() )
-    {
+    if( subtree.getNumChildren() ) {
         tree.addChild( subtree );
     }
     return tree;
@@ -62,16 +59,13 @@ JsonTree View::save()
 
 void View::load( const JsonTree &data )
 {
-    if( data.hasChild( "SUBVIEWS" ) && mLoadSubViews )
-    {
+    if( data.hasChild( "SUBVIEWS" ) && mLoadSubViews ) {
         JsonTree tree = data.getChild( "SUBVIEWS" );
         int numSubViews = tree.getNumChildren();
-        for(int i = 0; i < numSubViews; i++)
-        {
+        for(int i = 0; i < numSubViews; i++) {
             JsonTree sub = tree[i];
-            ViewRef subview = getSubView( sub.getValueForKey( "NAME" ) );
-            if( subview )
-            {
+            ViewRef subview = getSubView( sub.getValueForKey( "NAME" ), sub.getValueForKey<int>( "ID" ) );
+            if( subview ) {
                 subview->load( sub ); 
             }
         }
@@ -90,10 +84,8 @@ void View::setTriggerSubViews( bool triggerSubViews )
 
 void View::trigger( bool recursive )
 {
-    if( recursive && mTriggerSubViews )
-    {
-        for ( auto &it : mSubViews )
-        {
+    if( recursive && mTriggerSubViews ) {
+        for ( auto &it : mSubViews ) {
             it->trigger( recursive );
         }
     }
@@ -116,12 +108,10 @@ bool View::isVisible()
 
 void View::setVisible( bool visible )
 {
-    if( mVisible != visible )
-    {
+    if( mVisible != visible ) {
         mVisible = visible;
         setNeedsDisplay();
-        for ( auto &it : mSubViews )
-        {
+        for ( auto &it : mSubViews ) {
             it->setVisible( visible );
         }     
     }
@@ -141,8 +131,7 @@ void View::setOrigin( vec2 origin )
 vec2 View::getOrigin( bool recursive )
 {
     vec2 origin( mBounds.x1, mBounds.y1 );
-    if( recursive && !mSuperView.expired() )
-    {
+    if( recursive && !mSuperView.expired() ) {
         origin += mSuperView.lock()->getOrigin( recursive );
     }
     return origin;
@@ -184,16 +173,12 @@ float View::getHeight()
 Rectf View::getBounds( bool bIncludeSubviews )
 {
     Rectf bounds = Rectf( 0.0f, 0.0f, getWidth(), getHeight() );
-    if( bIncludeSubviews )
-    {
-        for ( auto &it : mSubViews )
-        {
+    if( bIncludeSubviews ) {
+        for ( auto &it : mSubViews ) {
             bounds.include( it->getBounds( bIncludeSubviews ) );
         }
         bounds.offset( getOrigin( false ) );
-    }
-    else
-    {
+    } else {
         bounds.offset( getOrigin() );
     }
     return bounds;
@@ -209,7 +194,7 @@ void View::addSubView( ViewRef subView )
     subView->setup(); 
     subView->setID( mUniqueIDs );
     mUniqueIDs++;
-    mSubViewsNameMap[ subView->getName() ] = subView;
+    mSubViewsNameMap.insert( { subView->getName(), subView } );
     mSubViews.push_back( subView );
     subView->mSuperView = shared_from_this();
     setNeedsDisplay( this );
@@ -217,10 +202,8 @@ void View::addSubView( ViewRef subView )
 
 void View::setup()
 {
-    for ( auto &it : mSubViews )
-    {
-        if( !it->isSetup() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( !it->isSetup() ) {
             it->setup();
         }
     }
@@ -229,20 +212,16 @@ void View::setup()
 
 void View::update()
 {
-    for ( auto &it : mSubViews )
-    {
+    for ( auto &it : mSubViews ) {
         it->update();
     }
 }
 
 void View::draw()
 {
-    if( mVisible )
-    {
-        for ( auto &it : mSubViews )
-        {
-            if( it->isVisible() )
-            {
+    if( mVisible ) {
+        for ( auto &it : mSubViews ) {
+            if( it->isVisible() ) {
                 it->draw();
             }
         }
@@ -273,50 +252,35 @@ vector<RenderData>& View::getViewRenderData()
 vector<RenderData>& View::getRenderData()
 {
     size_t index = 0;
-    if( mSetNeedsDisplay )
-    {
+    if( mSetNeedsDisplay ) {
         mViewRenderData = render();
-        if( mRenderData.size() < mViewRenderData.size() )
-        {
+        if( mRenderData.size() < mViewRenderData.size() ) {
             mRenderData.insert( mRenderData.begin(), mViewRenderData.begin(), mViewRenderData.end() );
             index = mViewRenderData.size();
-        }
-        else
-        {
-            for ( auto &it : mViewRenderData )
-            {
+        } else {
+            for ( auto &it : mViewRenderData ) {
                 mRenderData[index] = it;
                 index++;
             }
         }
         mSetNeedsDisplay = false;
-    }
-    else
-    {
+    } else {
         index = getViewRenderDataSize();
     }
     
-    for ( auto &it : mSubViews )
-    {
-        if( it->getNeedsDisplay() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->getNeedsDisplay() ) {
             vector<RenderData> &subViewData = it->getRenderData();
-            if( ( index+subViewData.size() ) > mRenderData.size() )
-            {
+            if( ( index+subViewData.size() ) > mRenderData.size() ) {
                 mRenderData.insert( mRenderData.end(), subViewData.begin(), subViewData.end() );
                 index += subViewData.size();
-            }
-            else
-            {
-                for ( auto &sit : subViewData )
-                {
+            } else {
+                for ( auto &sit : subViewData ) {
                     mRenderData[index] = sit;
                     index++;
                 }
             }
-        }
-        else
-        {
+        } else {
             index += it->getRenderDataSize();
         }
     }
@@ -325,12 +289,9 @@ vector<RenderData>& View::getRenderData()
 
 void View::setNeedsDisplay( bool bSetNeedsDisplay )
 {
-    if( bSetNeedsDisplay )
-    {
+    if( bSetNeedsDisplay ) {
         setNeedsDisplay(this);
-    }
-    else
-    {
+    } else {
         mSetNeedsDisplay = bSetNeedsDisplay;
     }
 }
@@ -342,38 +303,32 @@ bool View::getNeedsDisplay()
 
 void View::setNeedsDisplay( View *view, bool superViewNeedsDisplay, bool subViewsNeedsDisplay )
 {
-    if( view == this )
-    {
+    if( view == this ) {
         mSetNeedsDisplay = true;
     }
     
     //Super View
-    if( superViewNeedsDisplay )
-    {
+    if( superViewNeedsDisplay ) {
         setSuperViewNeedsDisplay();
     }
     
     //Sub Views
-    if( subViewsNeedsDisplay )
-    {
+    if( subViewsNeedsDisplay ) {
         setSubViewsNeedsDisplay();
     }
 }
 
 void View::setSuperViewNeedsDisplay()
 {
-    if( !mSuperView.expired() )
-    {
+    if( !mSuperView.expired() ) {
         mSuperView.lock()->setNeedsDisplay();
     }
 }
 
 void View::setSubViewsNeedsDisplay()
 {
-    for ( auto it : mSubViews )
-    {
-        if( it->isVisible() )
-        {
+    for ( auto it : mSubViews ) {
+        if( it->isVisible() ) {
             it->setNeedsDisplay( it.get(), false, true );
         }
     }
@@ -386,10 +341,8 @@ void View::autoSizeToFitSubviews()
     float minY = 100000.0f;
     float maxY = -100000.0f;
     
-    for ( auto &it : mSubViews )
-    {
-        if( it->isVisible() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isVisible() ) {
             Rectf b = it->getBounds( true );
             
             if( b.x1 < minX ) minX = b.x1;
@@ -405,8 +358,7 @@ void View::autoSizeToFitSubviews()
     }
     
     vec2 tl = vec2( minX, minY );
-    for( auto &it : mSubViews )
-    {
+    for( auto &it : mSubViews ) {
         it->setOrigin( it->getOrigin( false ) - tl + vec2( mPadding.mRight, mPadding.mBottom ) );
     }
     
@@ -425,15 +377,13 @@ void View::addCircle( vector<RenderData> &data, const ColorA &color, const vec2 
     vec2 off = vec2(mBounds.x1, mBounds.y1);
     vec3 pt = vec3( p + off, 0.0f );
     
-    if( !mSuperView.expired() )
-    {
+    if( !mSuperView.expired() ) {
         vec3 offset = vec3( mSuperView.lock()->getOrigin(), 0.0f );
         pt += offset;
     }
     
     float incAngle = 2.0f*M_PI/(float)resolution;
-    for( int i = 0; i < resolution; i++ )
-    {
+    for( int i = 0; i < resolution; i++ ) {
         float theta = i*incAngle;
         float thetaNext = (i+1)*incAngle;
         
@@ -480,8 +430,7 @@ void View::addLine( vector<RenderData> &data, const ColorA &color, const vec2 &p
     dir = cross(dir, zAxis);
     dir *= lineWidth*0.5f;
     
-    if( !mSuperView.expired() )
-    {
+    if( !mSuperView.expired() ) {
         vec3 offset = vec3( mSuperView.lock()->getOrigin(), 0.0f );
         pt0 += offset;
         pt1 += offset;
@@ -540,8 +489,7 @@ void View::addRect( vector<RenderData> &data, const ColorA &color, const Rectf &
     float x = mBounds.x1 + rect.x1;
     float y = mBounds.y1 + rect.y1;
     
-    if( !mSuperView.expired() )
-    {
+    if( !mSuperView.expired() ) {
         vec2 origin = mSuperView.lock()->getOrigin();
         x += origin.x;
         y += origin.y;
@@ -598,10 +546,8 @@ void View::addPointGrid( std::vector<RenderData> &data, const ci::ColorA &color,
     float hw = w*0.5;
     float hh = h*0.5;
     
-    for( int x = 0; x <= hw; x+=gridInterval )
-    {
-        for( int y = 0; y <= hh; y+=gridInterval )
-        {
+    for( int x = 0; x <= hw; x+=gridInterval ) {
+        for( int y = 0; y <= hh; y+=gridInterval ) {
             addPoint( data, color, offset + vec2(hw+x, hh+y), pointSize );
             addPoint( data, color, offset + vec2(hw-x, hh+y), pointSize );
             addPoint( data, color, offset + vec2(hw-x, hh-y), pointSize );
@@ -628,8 +574,7 @@ void View::addTriangle( std::vector<RenderData> &data, const ci::ColorA &color, 
 {
     vec2 off = vec2( mBounds.x1, mBounds.y1 );
     
-    if( !mSuperView.expired() )
-    {
+    if( !mSuperView.expired() ) {
         vec2 offset = mSuperView.lock()->getOrigin();
         off += offset;
     }
@@ -659,12 +604,13 @@ void View::addTriangle( std::vector<RenderData> &data, const ci::ColorA &color, 
     data.push_back( rd2 );
 }
 
-ViewRef View::getSubView( std::string subViewName )
+ViewRef View::getSubView( std::string subViewName, int subViewID )
 {
-    map<std::string, ViewRef>::iterator it = mSubViewsNameMap.find(subViewName);
-    if( it != mSubViewsNameMap.end() )
-    {
-        return it->second;
+    auto findings = mSubViewsNameMap.equal_range( subViewName );
+    for( auto it = findings.first; it != findings.second; ++it ) {
+        if( it->second->getID() == subViewID ) {
+            return it->second;
+        }
     }
     return nullptr;
 }
@@ -690,12 +636,9 @@ void View::touchesEnded( ci::app::TouchEvent &event )
 
 void View::mouseDown( ci::app::MouseEvent &event )
 {
-    if( isHit( event.getPos() ) )
-    {
-        for ( auto &it : mSubViews )
-        {
-            if( it->isVisible() && it->isEnabled() )
-            {
+    if( isHit( event.getPos() ) ) {
+        for ( auto &it : mSubViews ) {
+            if( it->isVisible() && it->isEnabled() ) {
                 it->mouseDown( event );
             }
         }
@@ -704,10 +647,8 @@ void View::mouseDown( ci::app::MouseEvent &event )
 
 void View::mouseUp( ci::app::MouseEvent &event )
 {
-    for ( auto &it : mSubViews )
-    {
-        if( it->isVisible() && it->isEnabled() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isVisible() && it->isEnabled() ) {
             it->mouseUp( event );
         }
     }
@@ -715,10 +656,8 @@ void View::mouseUp( ci::app::MouseEvent &event )
 
 void View::mouseWheel( ci::app::MouseEvent &event )
 {
-    for ( auto &it : mSubViews )
-    {
-        if( it->isVisible() && it->isEnabled() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isVisible() && it->isEnabled() ) {
             it->mouseWheel( event );
         }
     }
@@ -726,10 +665,8 @@ void View::mouseWheel( ci::app::MouseEvent &event )
 
 void View::mouseMove( ci::app::MouseEvent &event )
 {
-    for ( auto &it : mSubViews )
-    {
-        if( it->isVisible() && it->isEnabled() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isVisible() && it->isEnabled() ) {
             it->mouseMove( event );
         }
     }
@@ -737,10 +674,8 @@ void View::mouseMove( ci::app::MouseEvent &event )
 
 void View::mouseDrag( ci::app::MouseEvent &event )
 {
-    for ( auto &it : mSubViews )
-    {
-        if( it->isVisible() && it->isEnabled() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isVisible() && it->isEnabled() ) {
             it->mouseDrag( event );
         }
     }
@@ -748,10 +683,8 @@ void View::mouseDrag( ci::app::MouseEvent &event )
 
 void View::keyDown( ci::app::KeyEvent &event )
 {
-    for ( auto &it : mSubViews )
-    {
-        if( it->isEnabled() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isEnabled() ) {
             it->keyDown( event );
         }
     }
@@ -759,10 +692,8 @@ void View::keyDown( ci::app::KeyEvent &event )
 
 void View::keyUp( ci::app::KeyEvent &event )
 {
-    for ( auto &it : mSubViews )
-    {
-        if( it->isEnabled() )
-        {
+    for ( auto &it : mSubViews ) {
+        if( it->isEnabled() ) {
             it->keyUp( event );
         }
     }

@@ -88,7 +88,8 @@ public:
         return CanvasRef( new Canvas( name ) );
     }
 
-
+    EnvelopeRef addEnvelope( const std::string name, const Envelope::Format& format = Envelope::Format() );
+    
     QuaternionOrdererRef addQuaternionOrderer( const std::string name, const QuaternionOrderer::Format& format = QuaternionOrderer::Format()  );
 
     BSplineEditorRef addBSplineEditor( const std::string name, ci::BSpline2f spline, BSplineEditor::Format format = BSplineEditor::Format() );
