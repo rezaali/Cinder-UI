@@ -22,12 +22,10 @@ RangeT<T>::RangeT( std::string name, T *valueLow, T *valueHigh, T min, T max, Fo
 template<typename T>
 RangeT<T>::~RangeT()
 {
-    if( !mUseLowRef )
-    {
+    if( !mUseLowRef ) {
         delete mValueLowRef;
     }
-    if( !mUseHighRef )
-    {
+    if( !mUseHighRef ) {
         delete mValueHighRef;
     }
 }
@@ -35,8 +33,7 @@ RangeT<T>::~RangeT()
 template<typename T>
 void RangeT<T>::setup()
 {
-    if( !mLabelRef && mFormat.mLabel )
-    {
+    if( !mLabelRef && mFormat.mLabel ) {
         mLabelRef = Label::create( mName + "_LABEL", mName + ":[" + toString( getValueLow(), mFormat.mPrecision ) + "," + toString( getValueHigh(), mFormat.mPrecision ) +"]", FontSize::SMALL );
         mLabelRef->setOrigin( vec2( 0.0f, getHeight() ) );
         addSubView( mLabelRef );
@@ -47,19 +44,15 @@ void RangeT<T>::setup()
 template<typename T>
 void RangeT<T>::update()
 {
-    if( mUseLowRef )
-    {
+    if( mUseLowRef ) {
         T scaledValue = lmap<double>( mValueLow, 0.0, 1.0, mMin, mMax );
-        if( (*mValueLowRef) != scaledValue )
-        {
+        if( (*mValueLowRef) != scaledValue ) {
             setValueLow( *mValueLowRef );
         }
     }
-    if( mUseHighRef )
-    {
+    if( mUseHighRef ) {
         T scaledValue = lmap<double>( mValueHigh, 0.0, 1.0, mMin, mMax );
-        if( (*mValueHighRef) != scaledValue )
-        {
+        if( (*mValueHighRef) != scaledValue ) {
             setValueHigh( *mValueHighRef );
         }
     }
@@ -69,8 +62,7 @@ void RangeT<T>::update()
 template<typename T>
 void RangeT<T>::trigger( bool recursive )
 {
-    if( mCallbackFn )
-    {
+    if( mCallbackFn ) {
         mCallbackFn( getValueLow(), getValueHigh() );
     }
     Control::trigger( recursive );
@@ -88,8 +80,7 @@ JsonTree RangeT<T>::save()
 template<typename T>
 void RangeT<T>::load( const ci::JsonTree &data )
 {
-    if( data.hasChild( "LVALUE" ) && data.hasChild( "HVALUE" ))
-    {
+    if( data.hasChild( "LVALUE" ) && data.hasChild( "HVALUE" ) ) {
         setValue( data.getValueForKey<T>("LVALUE"), data.getValueForKey<T>("HVALUE") );
         trigger();
     }
@@ -99,8 +90,7 @@ void RangeT<T>::load( const ci::JsonTree &data )
 template<typename T>
 void RangeT<T>::setValue( T valueLow, T valueHigh )
 {
-    if( mStickyEnabled && mFormat.mSticky )
-    {
+    if( mStickyEnabled && mFormat.mSticky ) {
         valueLow = ceil( valueLow / mFormat.mStickyValue ) * mFormat.mStickyValue;
         valueHigh = ceil( valueHigh / mFormat.mStickyValue ) * mFormat.mStickyValue;
     }
@@ -209,13 +199,10 @@ void RangeT<T>::setMinAndMax( T min, T max, bool keepValueTheSame )
     mMax = max;
     mMin = min;
     
-    if( !keepValueTheSame )
-    {
+    if( !keepValueTheSame ) {
         setValue( lmap<double>( getNormalizedValueLow(), 0.0, 1.0, min, max ),
                   lmap<double>( getNormalizedValueHigh(), 0.0, 1.0, min, max ) );
-    }
-    else
-    {
+    } else {
         setValue( std::max( std::min( *mValueLowRef, mMax ), mMin ), std::max( std::min( *mValueHighRef, mMax ), mMin ) );
     }
 }
@@ -223,8 +210,7 @@ void RangeT<T>::setMinAndMax( T min, T max, bool keepValueTheSame )
 template<typename T>
 void RangeT<T>::setValueLowRef( T *value )
 {
-    if( !mUseLowRef )
-    {
+    if( !mUseLowRef ) {
         mUseLowRef = false;
         delete mValueLowRef;
     }
@@ -234,8 +220,7 @@ void RangeT<T>::setValueLowRef( T *value )
 template<typename T>
 void RangeT<T>::setValueHighRef( T *value )
 {
-    if( !mUseHighRef )
-    {
+    if( !mUseHighRef ) {
         mUseHighRef = false;
         delete mValueHighRef;
     }
@@ -246,8 +231,8 @@ template<typename T>
 void RangeT<T>::drawFill( std::vector<RenderData> &data, const ci::ColorA &color )
 {
     Rectf rect = mHitRect;
-    rect.x1 = mHitRect.x1 + mHitRect.getWidth()*getNormalizedValueLow();
-    rect.x2 = mHitRect.x1 + mHitRect.getWidth()*getNormalizedValueHigh();
+    rect.x1 = mHitRect.x1 + mHitRect.getWidth() * getNormalizedValueLow();
+    rect.x2 = mHitRect.x1 + mHitRect.getWidth() * getNormalizedValueHigh();
     addRect( data, color, rect );
 }
 
@@ -263,49 +248,34 @@ void RangeT<T>::input( const glm::vec2 &pt )
     vec2 hp = getHitPercent( pt );
     hp.x = min( max( hp.x, 0.0f ), 1.0f );
     
-    if( mHitHigh )
-    {
+    if( mHitHigh ) {
         mValueHigh = hp.x;
-    }
-    else if( mHitLow )
-    {
+    } else if( mHitLow ) {
         mValueLow = hp.x;
-    }
-    else if( mHitCenter )
-    {
+    } else if( mHitCenter ) {
         mValueHigh += ( hp.x - mHitPoint );
         mValueLow += ( hp.x - mHitPoint );
         mHitPoint = hp.x;
-    }
-    else
-    {
+    } else {
         double dvh = abs( mValueHigh - hp.x );
         double dvl = abs( mValueLow - hp.x );
-        if( dvh < .05 || hp.x > mValueHigh )
-        {
+        if( dvh < .05 || hp.x > mValueHigh ) {
             mValueHigh = hp.x;
             mHitHigh = true;
-        }
-        else if( dvl < .05 || hp.x < mValueLow )
-        {
+        } else if( dvl < .05 || hp.x < mValueLow ) {
             mValueLow = hp.x;
             mHitLow = true;
-        }
-        else
-        {
+        } else {
             mHitCenter = true;
             mHitPoint = hp.x;
         }
     }
     
-    if( mValueHigh < mValueLow && mHitHigh )
-    {
+    if( mValueHigh < mValueLow && mHitHigh ) {
         mValueHigh = mHitValueLow;
         mHitHigh = false;
         mHitLow = true;
-    }
-    else if( mValueLow > mValueHigh && mHitLow )
-    {
+    } else if( mValueLow > mValueHigh && mHitLow ) {
         mValueLow = mHitValueHigh;
         mHitHigh = true;
         mHitLow = false;
@@ -319,20 +289,16 @@ void RangeT<T>::input( const glm::vec2 &pt )
 template<typename T>
 void RangeT<T>::mouseDown( ci::app::MouseEvent &event )
 {
-    if( isHit( event.getPos() ) )
-    {
+    if( isHit( event.getPos() ) ) {
         mHit = true;
         setState( State::DOWN );
         mHitValueHigh = mValueHigh;
         mHitValueLow = mValueLow;
         input( event.getPos() );
-        if( (int)mTrigger & (int)Trigger::BEGIN )
-        {
+        if( (int)mTrigger & (int)Trigger::BEGIN ) {
             trigger();
         }
-    }
-    else
-    {
+    } else {
         setState( State::NORMAL );
     }
 }
@@ -374,12 +340,9 @@ void RangeT<T>::mouseWheel( ci::app::MouseEvent &event )
 template<typename T>
 void RangeT<T>::mouseMove( ci::app::MouseEvent &event )
 {
-    if( isHit( event.getPos() ) )
-    {
+    if( isHit( event.getPos() ) ) {
         setState( State::OVER );
-    }
-    else
-    {
+    } else {
         setState( State::NORMAL );
     }
 }
@@ -387,19 +350,15 @@ void RangeT<T>::mouseMove( ci::app::MouseEvent &event )
 template<typename T>
 void RangeT<T>::mouseDrag( ci::app::MouseEvent &event )
 {
-    if( mHit )
-    {
+    if( mHit ) {
         setState( State::DOWN );
         mHitValueHigh = mValueHigh;
         mHitValueLow = mValueLow;
         input( event.getPos() );
-        if( (int)mTrigger & (int)Trigger::CHANGE )
-        {
+        if( (int)mTrigger & (int)Trigger::CHANGE ) {
             trigger();
         }
-    }
-    else
-    {
+    } else {
         setState( State::NORMAL );
     }
 }
@@ -407,8 +366,7 @@ void RangeT<T>::mouseDrag( ci::app::MouseEvent &event )
 template<typename T>
 void RangeT<T>::keyDown( ci::app::KeyEvent &event )
 {
-    if( event.isShiftDown() )
-    {
+    if( event.isShiftDown() ) {
         mStickyEnabled = true;
     }
 }
