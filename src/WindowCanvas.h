@@ -29,7 +29,11 @@ public:
 
 protected:
     WindowCanvas( std::string title );
+    void setup() override;
+    
     const std::string getType() override { return "WindowCanvas"; }
+    
+    bool isSaveable() override { return true; }
     
     ci::app::WindowRef createWindow();
     bool mValidRef;

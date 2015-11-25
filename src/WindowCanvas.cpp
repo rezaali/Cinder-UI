@@ -8,7 +8,9 @@ using namespace glm;
 using namespace cinder;
 using namespace std;
 
-WindowCanvas::WindowCanvas( std::string title ) : Canvas( title, nullptr )
+WindowCanvas::WindowCanvas( std::string title ) : Canvas( title, nullptr ) { }
+
+void WindowCanvas::setup()
 {
     setWindow( createWindow() );
 }
