@@ -5,5 +5,5 @@
 #include "Control.h"
 #include "Canvas.h"
 #include "SuperCanvas.h"
-
+#include "WindowCanvas.h"
 

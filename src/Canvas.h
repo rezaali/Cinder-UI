@@ -37,7 +37,8 @@ public:
     virtual void save( const ci::fs::path &path );
     virtual void load( const ci::fs::path &path );
     
-    void setWindow( ci::app::WindowRef window ); 
+    void setWindow( ci::app::WindowRef window );
+    ci::app::WindowRef getWindow();
     void setSize( glm::vec2 size ) override;
     
     void setEnabled( bool enabled );    

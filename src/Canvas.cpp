@@ -50,6 +50,11 @@ void Canvas::setWindow( ci::app::WindowRef window )
     if( isEnabled() ) { enable(); } else { disable(); }
 }
 
+app::WindowRef Canvas::getWindow()
+{
+    return mWindowRef;
+}
+
 void Canvas::setSize( vec2 size )
 {
     View::setSize( size );
@@ -74,7 +79,7 @@ void Canvas::setEnabled( bool enabled )
 void Canvas::enable()
 {
     mEnabled = true;
-    if( mWindowRef->isValid() ) {
+    if( mWindowRef && mWindowRef->isValid() ) {
         enableUpdateCallback();
 #if defined( CINDER_COCOA_TOUCH )
         enableTouchCallbacks();
@@ -88,7 +93,7 @@ void Canvas::enable()
 void Canvas::disable()
 {
     mEnabled = false;
-    if( mWindowRef->isValid() ) {
+    if( mWindowRef && mWindowRef->isValid() ) {
         disableUpdateCallback();
 #if defined( CINDER_COCOA_TOUCH )
         disableTouchCallbacks();
