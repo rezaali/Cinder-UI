@@ -13,6 +13,7 @@ WindowCanvas::WindowCanvas( std::string title ) : Canvas( title, nullptr ) { }
 void WindowCanvas::setup()
 {
     setWindow( createWindow() );
+    View::setup();
 }
 
 app::WindowRef WindowCanvas::createWindow()
