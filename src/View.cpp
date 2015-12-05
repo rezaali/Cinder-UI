@@ -64,7 +64,6 @@ void View::load( const JsonTree &data )
         int numSubViews = tree.getNumChildren();
         for(int i = 0; i < numSubViews; i++) {
             JsonTree sub = tree[i];
-            cout << sub << endl;
             string name = sub.getValueForKey( "NAME" );
             int id = sub.getValueForKey<int>( "ID" );
             ViewRef subview = getSubView( name, id );
