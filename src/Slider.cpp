@@ -68,8 +68,9 @@ template<typename T>
 JsonTree SliderT<T>::save()
 {
     JsonTree tree = View::save();
-    tree.addChild( JsonTree( "VALUE",  isnan( getValue() ) ? mMin : getValue() ) );
-    return tree;
+	// TODO tree.addChild(JsonTree("VALUE", isnan(getValue()) ? mMin : getValue()));
+	tree.addChild(JsonTree("VALUE", getValue()));
+	return tree;
 }
 
 template<typename T>

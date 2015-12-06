@@ -1,9 +1,12 @@
 #pragma once
 
 #include "ControlWithLabel.h"
-#include "cinder/gl/Texture.h"
+#include "cinder/gl/gl.h"
 
-namespace reza { namespace ui {
+using namespace ci;
+
+namespace reza {
+	namespace ui {
     
 typedef std::shared_ptr<class TextureView> TextureViewRef;
 class TextureView : public ControlWithLabel

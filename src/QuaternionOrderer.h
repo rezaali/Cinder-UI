@@ -2,6 +2,8 @@
 
 #include "ControlWithLabel.h"
 
+#include "cinder/gl/gl.h"
+
 namespace reza { namespace ui {
     
 typedef std::shared_ptr<class QuaternionOrderer> QuaternionOrdererRef;

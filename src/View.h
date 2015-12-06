@@ -3,11 +3,14 @@
 #include "cinder/Rect.h"
 #include "cinder/Color.h"
 #include "cinder/Json.h"
+#include "cinder/app/App.h"
 
 #include "Responder.h"
 #include "RenderData.h"
 #include "Padding.h"
 #include <vector>
+
+using namespace ci::app; 
 
 namespace reza { namespace ui {
     
