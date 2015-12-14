@@ -60,10 +60,10 @@ JsonTree View::save()
 void View::load( const JsonTree &data )
 {
     if( data.hasChild( "SUBVIEWS" ) && mLoadSubViews ) {
-        JsonTree tree = data.getChild( "SUBVIEWS" );
+        const JsonTree& tree = data.getChild( "SUBVIEWS" );
         int numSubViews = tree.getNumChildren();
         for(int i = 0; i < numSubViews; i++) {
-            JsonTree sub = tree[i];
+            const JsonTree& sub = tree[i];
             string name = sub.getValueForKey( "NAME" );
             int id = sub.getValueForKey<int>( "ID" );
             ViewRef subview = getSubView( name, id );

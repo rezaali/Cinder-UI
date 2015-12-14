@@ -94,6 +94,7 @@ void WindowCanvas::load( const ci::fs::path &path )
 {
     if( fs::exists( path ) ) {
         JsonTree tree( loadFile( path ) );
+        View::load( tree );
         if( tree.hasChild( "VALID" ) ) {
             if( tree.hasChild( "XPOS" ) && tree.hasChild( "YPOS" ) ) {
                 setPos( vec2( tree.getValueForKey<float>( "XPOS" ), tree.getValueForKey<float>( "YPOS" ) ) );
@@ -102,7 +103,6 @@ void WindowCanvas::load( const ci::fs::path &path )
                 close();
             }
         }
-        View::load( tree );
         trigger();
     }
 }

@@ -36,8 +36,7 @@ void Canvas::save( const ci::fs::path &path )
 
 void Canvas::load( const ci::fs::path &path )
 {
-    if( fs::exists( path ) )
-    {
+    if( fs::exists( path ) ) {
         JsonTree tree( loadFile( path ) );
         View::load( tree );
         trigger();
