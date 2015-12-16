@@ -3,6 +3,10 @@
 #include "ControlWithLabel.h"
 #include "Alignments.h"
 
+#include "cinder/gl/gl.h"
+
+using namespace ci;
+
 namespace reza { namespace ui {
     
 typedef std::shared_ptr<class ColorPicker> ColorPickerRef;

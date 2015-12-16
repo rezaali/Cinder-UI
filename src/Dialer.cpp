@@ -150,7 +150,7 @@ void DialerT<T>::updateLabel()
     string label = "";
     if( mFormat.mSign ) { label += ( value > 0 ? "+" : "-" ); }
     
-    label += toString( fabs(value), mFormat.mPrecision, mSetWidth, '0' );
+	//label += reza::ui::toString(fabs(value), mFormat.mPrecision, mSetWidth, '0');
 
     if( mFormat.mLabel ) { label += " " + mName; }
     
