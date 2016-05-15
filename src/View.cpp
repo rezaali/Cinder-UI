@@ -60,11 +60,16 @@ JsonTree View::save()
 void View::load( const JsonTree &data )
 {
     if( data.hasChild( "SUBVIEWS" ) && mLoadSubViews ) {
-        JsonTree tree = data.getChild( "SUBVIEWS" );
+        const JsonTree& tree = data.getChild( "SUBVIEWS" );
         int numSubViews = tree.getNumChildren();
         for(int i = 0; i < numSubViews; i++) {
-            JsonTree sub = tree[i];
-            ViewRef subview = getSubView( sub.getValueForKey( "NAME" ), sub.getValueForKey<int>( "ID" ) );
+            const JsonTree& sub = tree[i];
+            string name = sub.getValueForKey( "NAME" );
+            int id = sub.getValueForKey<int>( "ID" );
+            ViewRef subview = getSubView( name, id );
+            if( !subview ) {
+                subview = getSubView( name );
+            }
             if( subview ) {
                 subview->load( sub ); 
             }
@@ -608,7 +613,9 @@ ViewRef View::getSubView( std::string subViewName, int subViewID )
 {
     auto findings = mSubViewsNameMap.equal_range( subViewName );
     for( auto it = findings.first; it != findings.second; ++it ) {
-        if( it->second->getID() == subViewID ) {
+        if( subViewID == -1 ) {
+            return it->second;
+        } else if( it->second->getID() == subViewID ) {
             return it->second;
         }
     }

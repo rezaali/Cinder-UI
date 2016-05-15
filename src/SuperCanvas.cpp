@@ -177,6 +177,7 @@ void SuperCanvas::load( const ci::fs::path &path )
     if( fs::exists( path ) )
     {
         JsonTree tree( loadFile( path ) );
+        View::load( tree );
         if( tree.hasChild( "MINIFIED" ) )
         {
             setMinified( tree.getValueForKey<bool>("MINIFIED") );
@@ -184,8 +185,7 @@ void SuperCanvas::load( const ci::fs::path &path )
         if( tree.hasChild( "XPOS" ) && tree.hasChild( "YPOS" ) )
         {
             setOrigin( vec2( tree.getValueForKey<float>( "XPOS" ), tree.getValueForKey<float>( "YPOS" ) ) );
-        }
-        View::load( tree );
+        }        
         trigger();
     }
 }

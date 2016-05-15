@@ -41,7 +41,7 @@ public:
     ci::app::WindowRef getWindow();
     void setSize( glm::vec2 size ) override;
     
-    void setEnabled( bool enabled );    
+    void setEnabled( bool enabled ) override; 
     void enable();
     void disable();
     

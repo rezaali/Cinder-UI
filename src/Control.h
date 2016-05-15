@@ -25,10 +25,10 @@ public:
     virtual bool isHit( const glm::vec2 &pt ) override;
     virtual glm::vec2 getHitPercent( const glm::vec2 &pt ) override;
     
-    virtual ci::Rectf getBounds( bool bIncludeSubviews = false );
+    virtual ci::Rectf getBounds( bool bIncludeSubviews = false ) override;
     
     //DIMENSIONS
-    virtual void setSize( glm::vec2 size );
+    virtual void setSize( glm::vec2 size ) override; 
 
     //PROPERTIES
     virtual void setState( State state );
