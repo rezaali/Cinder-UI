@@ -1,0 +1,262 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="ANGLE">
+      <UniqueIdentifier>{45946981-8d7c-4a51-9f4d-11d6addf5727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ANGLE\Win32">
+      <UniqueIdentifier>{d846cdb2-0586-4557-8da0-656e4b7482fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ANGLE\x64">
+      <UniqueIdentifier>{96d88de8-ede7-4c87-baf2-c228e16226b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blocks">
+      <UniqueIdentifier>{CE740E72-B8E9-4D08-AD61-4A4689F91AD3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blocks\UI">
+      <UniqueIdentifier>{F009D12B-FDBA-4F68-8B8F-0A3DDD153687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blocks\UI\src">
+      <UniqueIdentifier>{B9C3EE9E-AFF9-471F-A99A-79D2CA100833}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\basicApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\basicApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClInclude Include="..\include\Resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Alignments.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\BSplineEditor.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Button.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Canvas.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ColorPicker.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Colors.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Control.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Controls.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ControlWithLabel.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Dialer.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Directions.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FontSizes.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Fps.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Globals.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Graph.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Helpers.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Label.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MultiSlider.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Padding.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Plotter.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\QuaternionOrderer.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Radio.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Range.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\RenderData.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Responder.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Slider.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Spacer.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Spectrum.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\States.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SuperCanvas.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TextInput.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TextureView.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Toggle.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Triggers.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\UI.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\View.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Waveform.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\XYPad.h">
+      <Filter>Blocks\UI\src</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\..\src\BSplineEditor.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Button.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Canvas.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ColorPicker.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Colors.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Control.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ControlWithLabel.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Dialer.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Fps.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Globals.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Graph.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Label.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MultiSlider.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Plotter.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\QuaternionOrderer.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Radio.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Range.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Responder.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Slider.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Spacer.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Spectrum.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SuperCanvas.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TextInput.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TextureView.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Toggle.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\View.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Waveform.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\XYPad.cpp">
+      <Filter>Blocks\UI\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\lib\winrt\x86\libEGL.dll">
+      <Filter>ANGLE\Win32</Filter>
+    </None>
+    <None Include="..\..\..\..\..\lib\winrt\x86\libGLESv2.dll">
+      <Filter>ANGLE\Win32</Filter>
+    </None>
+    <None Include="..\..\..\..\..\lib\winrt\x64\libEGL.dll">
+      <Filter>ANGLE\x64</Filter>
+    </None>
+    <None Include="..\..\..\..\..\lib\winrt\x64\libGLESv2.dll">
+      <Filter>ANGLE\x64</Filter>
+    </None>
+  </ItemGroup>
+</Project>

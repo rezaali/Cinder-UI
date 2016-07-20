@@ -55,7 +55,7 @@ public:
     void updateValueRef();
     void updateLabel();
     
-    virtual void setCallback( const std::function<void(T, T)> &callback );
+    virtual RangeT* setCallback( const std::function<void(T, T)> &callback );
     
     void setMax( T max, bool keepValueTheSame = false );
     T getMax();

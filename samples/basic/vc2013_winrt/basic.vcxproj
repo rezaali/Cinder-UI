@@ -1,0 +1,228 @@
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4841BEB3-25C8-4311-B6F8-145246D1DCBE}</ProjectGuid>
+    <RootNamespace>basic</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <ProjectName>basic</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DisableSpecificWarnings>4453</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\..\..\..\..\include;..\..\..\..\..\boost;..\..\..\..\..\include\ANGLE;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\..\lib\winrt\$(PlatformTarget)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder-$(PlatformToolset).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;..\..\..\..\..\include;..\..\..\..\..\boost;..\..\..\..\..\include\ANGLE;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\..\..\..\lib\winrt\$(PlatformTarget)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder-$(PlatformToolset)_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Image Include="VisualAssets\Logo.png" />
+    <Image Include="VisualAssets\SmallLogo.png" />
+    <Image Include="VisualAssets\StoreLogo.png" />
+    <Image Include="VisualAssets\SplashScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\lib\winrt\x64\libEGL.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\..\..\lib\winrt\x64\libGLESv2.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\..\..\lib\winrt\x86\libEGL.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\..\..\lib\winrt\x86\libGLESv2.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\basicApp.cpp" />
+    <ClCompile Include="..\..\..\src\BSplineEditor.cpp" />
+    <ClCompile Include="..\..\..\src\Button.cpp" />
+    <ClCompile Include="..\..\..\src\Canvas.cpp" />
+    <ClCompile Include="..\..\..\src\ColorPicker.cpp" />
+    <ClCompile Include="..\..\..\src\Colors.cpp" />
+    <ClCompile Include="..\..\..\src\Control.cpp" />
+    <ClCompile Include="..\..\..\src\ControlWithLabel.cpp" />
+    <ClCompile Include="..\..\..\src\Dialer.cpp" />
+    <ClCompile Include="..\..\..\src\Fps.cpp" />
+    <ClCompile Include="..\..\..\src\Globals.cpp" />
+    <ClCompile Include="..\..\..\src\Graph.cpp" />
+    <ClCompile Include="..\..\..\src\Label.cpp" />
+    <ClCompile Include="..\..\..\src\MultiSlider.cpp" />
+    <ClCompile Include="..\..\..\src\Plotter.cpp" />
+    <ClCompile Include="..\..\..\src\QuaternionOrderer.cpp" />
+    <ClCompile Include="..\..\..\src\Radio.cpp" />
+    <ClCompile Include="..\..\..\src\Range.cpp" />
+    <ClCompile Include="..\..\..\src\Responder.cpp" />
+    <ClCompile Include="..\..\..\src\Slider.cpp" />
+    <ClCompile Include="..\..\..\src\Spacer.cpp" />
+    <ClCompile Include="..\..\..\src\Spectrum.cpp" />
+    <ClCompile Include="..\..\..\src\SuperCanvas.cpp" />
+    <ClCompile Include="..\..\..\src\TextInput.cpp" />
+    <ClCompile Include="..\..\..\src\TextureView.cpp" />
+    <ClCompile Include="..\..\..\src\Toggle.cpp" />
+    <ClCompile Include="..\..\..\src\View.cpp" />
+    <ClCompile Include="..\..\..\src\Waveform.cpp" />
+    <ClCompile Include="..\..\..\src\XYPad.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Resources.h" />
+    <ClInclude Include="..\..\..\src\Alignments.h" />
+    <ClInclude Include="..\..\..\src\BSplineEditor.h" />
+    <ClInclude Include="..\..\..\src\Button.h" />
+    <ClInclude Include="..\..\..\src\Canvas.h" />
+    <ClInclude Include="..\..\..\src\ColorPicker.h" />
+    <ClInclude Include="..\..\..\src\Colors.h" />
+    <ClInclude Include="..\..\..\src\Control.h" />
+    <ClInclude Include="..\..\..\src\Controls.h" />
+    <ClInclude Include="..\..\..\src\ControlWithLabel.h" />
+    <ClInclude Include="..\..\..\src\Dialer.h" />
+    <ClInclude Include="..\..\..\src\Directions.h" />
+    <ClInclude Include="..\..\..\src\FontSizes.h" />
+    <ClInclude Include="..\..\..\src\Fps.h" />
+    <ClInclude Include="..\..\..\src\Globals.h" />
+    <ClInclude Include="..\..\..\src\Graph.h" />
+    <ClInclude Include="..\..\..\src\Helpers.h" />
+    <ClInclude Include="..\..\..\src\Label.h" />
+    <ClInclude Include="..\..\..\src\MultiSlider.h" />
+    <ClInclude Include="..\..\..\src\Padding.h" />
+    <ClInclude Include="..\..\..\src\Plotter.h" />
+    <ClInclude Include="..\..\..\src\QuaternionOrderer.h" />
+    <ClInclude Include="..\..\..\src\Radio.h" />
+    <ClInclude Include="..\..\..\src\Range.h" />
+    <ClInclude Include="..\..\..\src\RenderData.h" />
+    <ClInclude Include="..\..\..\src\Responder.h" />
+    <ClInclude Include="..\..\..\src\Slider.h" />
+    <ClInclude Include="..\..\..\src\Spacer.h" />
+    <ClInclude Include="..\..\..\src\Spectrum.h" />
+    <ClInclude Include="..\..\..\src\States.h" />
+    <ClInclude Include="..\..\..\src\SuperCanvas.h" />
+    <ClInclude Include="..\..\..\src\TextInput.h" />
+    <ClInclude Include="..\..\..\src\TextureView.h" />
+    <ClInclude Include="..\..\..\src\Toggle.h" />
+    <ClInclude Include="..\..\..\src\Triggers.h" />
+    <ClInclude Include="..\..\..\src\UI.h" />
+    <ClInclude Include="..\..\..\src\View.h" />
+    <ClInclude Include="..\..\..\src\Waveform.h" />
+    <ClInclude Include="..\..\..\src\XYPad.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

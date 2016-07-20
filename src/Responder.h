@@ -1,3 +1,5 @@
+#include <string>
+
 #pragma once
 
 namespace reza { namespace ui {
