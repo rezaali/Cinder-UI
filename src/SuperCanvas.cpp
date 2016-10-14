@@ -160,14 +160,19 @@ void SuperCanvas::save( const ci::fs::path &path )
 void SuperCanvas::load( const ci::fs::path &path )
 {
 	if( fs::exists( path ) ) {
-		JsonTree tree( loadFile( path ) );
-		View::load( tree );
-		if( tree.hasChild( "MINIFIED" ) ) {
-			setMinified( tree.getValueForKey<bool>( "MINIFIED" ) );
+		try {
+			JsonTree tree( loadFile( path ) );
+			View::load( tree );
+			if( tree.hasChild( "MINIFIED" ) ) {
+				setMinified( tree.getValueForKey<bool>( "MINIFIED" ) );
+			}
+			if( tree.hasChild( "XPOS" ) && tree.hasChild( "YPOS" ) ) {
+				setOrigin( vec2( tree.getValueForKey<float>( "XPOS" ), tree.getValueForKey<float>( "YPOS" ) ) );
+			}
+			trigger();
 		}
-		if( tree.hasChild( "XPOS" ) && tree.hasChild( "YPOS" ) ) {
-			setOrigin( vec2( tree.getValueForKey<float>( "XPOS" ), tree.getValueForKey<float>( "YPOS" ) ) );
+		catch( ci::Exception exc ) {
+			cout << "SUPER CANVAS LOAD ERROR: " << exc.what() << endl;
 		}
-		trigger();
 	}
 }

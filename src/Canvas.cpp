@@ -29,6 +29,7 @@ void Canvas::clear()
 {
 	clearPlacer();
 	View::clear();
+	mSetup = false;
 }
 
 void Canvas::save( const ci::fs::path &path )
@@ -40,10 +41,15 @@ void Canvas::save( const ci::fs::path &path )
 void Canvas::load( const ci::fs::path &path )
 {
 	if( fs::exists( path ) ) {
-		JsonTree tree( loadFile( path ) );
-		View::load( tree );
-		if( mTriggerOnLoad ) {
-			trigger();
+		try {
+			JsonTree tree( loadFile( path ) );
+			View::load( tree );
+			if( mTriggerOnLoad ) {
+				trigger();
+			}
+		}
+		catch( ci::Exception exc ) {
+			std::cout << "CANVAS LOAD ERROR: " << exc.what() << std::endl;
 		}
 	}
 }
@@ -369,7 +375,7 @@ void Canvas::draw()
 		gl::ScopedDepthWrite scpDwt( false );
 		gl::ScopedBlendAlpha scpAlp;
 		gl::pushMatrices();
-		gl::setMatricesWindow( app::getWindowWidth(), app::getWindowHeight() );
+		//		gl::setMatricesWindow( getSize() );
 
 		gl::ScopedVao scopedVao( mVaoRef );
 		gl::ScopedGlslProg scopedShader( mGlslProgRef );
@@ -860,6 +866,18 @@ ColorPickerRef Canvas::addColorPicker( std::string name, ci::ColorA *color, cons
 	return ref;
 }
 
+void Canvas::right()
+{
+	setSubViewAlignment( Alignment::NONE );
+	setSubViewDirection( Direction::EAST );
+}
+
+void Canvas::down()
+{
+	setSubViewAlignment( Alignment::LEFT );
+	setSubViewDirection( Direction::SOUTH );
+}
+
 vector<RenderData> &Canvas::getRenderData()
 {
 	size_t index = 0;
@@ -893,7 +911,6 @@ vector<RenderData> &Canvas::getRenderData()
 				setupBuffers();
 			}
 			else {
-				//                cout << "REBUFFERING: " << it->getName() << endl;
 				mVboRef->bufferSubData( index * sizeof( RenderData ), subViewData.size() * sizeof( RenderData ), subViewData.data() );
 				for( auto &sit : subViewData ) {
 					mRenderData[index] = sit;

@@ -30,7 +30,7 @@ app::WindowRef WindowCanvas::createWindow()
 	window->setTitle( name );
 	window->getSignalClose().connect( [this] { mValidRef = false; } );
 	window->getSignalMove().connect( [this] { if( isValid() ) { mWindowOrigin = mWindowRef->getPos(); } } );
-	window->getSignalDraw().connect( [this] {
+	window->getSignalDraw().connect( [this, window] {
 		gl::clear( Color::black() );
 		gl::setMatricesWindow( this->getSize() );
 	} );
@@ -82,7 +82,13 @@ void WindowCanvas::autoSizeToFitSubviews()
 {
 	View::autoSizeToFitSubviews();
 	if( isValid() ) {
-		mWindowRef->setSize( getSize() );
+		if( mSubViews.size() ) {
+			mWindowRef->setSize( getSize() );
+		}
+		else {
+			setSize( vec2( mCanvasWidth, 0 ) );
+			mWindowRef->setSize( vec2( mCanvasWidth, 0 ) );
+		}
 	}
 }
 
@@ -99,16 +105,21 @@ void WindowCanvas::save( const ci::fs::path &path )
 void WindowCanvas::load( const ci::fs::path &path )
 {
 	if( fs::exists( path ) ) {
-		JsonTree tree( loadFile( path ) );
-		View::load( tree );
-		if( tree.hasChild( "VALID" ) ) {
-			if( tree.hasChild( "XPOS" ) && tree.hasChild( "YPOS" ) ) {
-				setPos( vec2( tree.getValueForKey<float>( "XPOS" ), tree.getValueForKey<float>( "YPOS" ) ) );
+		try {
+			JsonTree tree( loadFile( path ) );
+			View::load( tree );
+			if( tree.hasChild( "VALID" ) ) {
+				if( tree.hasChild( "XPOS" ) && tree.hasChild( "YPOS" ) ) {
+					setPos( vec2( tree.getValueForKey<float>( "XPOS" ), tree.getValueForKey<float>( "YPOS" ) ) );
+				}
+				if( !tree.getValueForKey<bool>( "VALID" ) ) {
+					close();
+				}
 			}
-			if( !tree.getValueForKey<bool>( "VALID" ) ) {
-				close();
-			}
+			trigger();
 		}
-		trigger();
+		catch( ci::Exception exc ) {
+			std::cout << "WINDOW CANVAS LOAD ERROR: " << exc.what() << std::endl;
+		}
 	}
 }

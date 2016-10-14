@@ -153,6 +153,9 @@ class Canvas : public Control {
 
 	ColorPickerRef addColorPicker( std::string name, ci::ColorA *color, const ColorPicker::Format &format = ColorPicker::Format() );
 
+	void right();
+	void down();
+
   protected:
 	void enableUpdateCallback();
 	void disableUpdateCallback();

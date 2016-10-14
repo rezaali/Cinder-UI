@@ -118,6 +118,7 @@ class View : public Responder, public std::enable_shared_from_this<class View> {
 
 	ViewRef getSubView( std::string subViewName, int subViewID = -1 );
 
+    std::vector<ViewRef> getSubViews();
   protected:
 	View();
 	ViewWeakRef mSuperView;

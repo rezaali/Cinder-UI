@@ -383,37 +383,42 @@ void View::autoSizeToFitSubviews()
 	float minY = 100000.0f;
 	float maxY = -100000.0f;
 
-	for( auto &it : mSubViews ) {
-		if( it->isVisible() ) {
-			Rectf b = it->getBounds( true );
+	if( mSubViews.size() ) {
+		for( auto &it : mSubViews ) {
+			if( it->isVisible() ) {
+				Rectf b = it->getBounds( true );
 
-			if( b.x1 < minX )
-				minX = b.x1;
-			else if( b.x1 > maxX )
-				maxX = b.x1;
-			if( b.x2 < minX )
-				minX = b.x2;
-			else if( b.x2 > maxX )
-				maxX = b.x2;
+				if( b.x1 < minX )
+					minX = b.x1;
+				if( b.x1 > maxX )
+					maxX = b.x1;
+				if( b.x2 < minX )
+					minX = b.x2;
+				if( b.x2 > maxX )
+					maxX = b.x2;
 
-			if( b.y1 < minY )
-				minY = b.y1;
-			else if( b.y1 > maxY )
-				maxY = b.y1;
-			if( b.y2 < minY )
-				minY = b.y2;
-			else if( b.y2 > maxY )
-				maxY = b.y2;
+				if( b.y1 < minY )
+					minY = b.y1;
+				if( b.y1 > maxY )
+					maxY = b.y1;
+				if( b.y2 < minY )
+					minY = b.y2;
+				if( b.y2 > maxY )
+					maxY = b.y2;
+			}
 		}
-	}
 
-	vec2 tl = vec2( minX, minY );
-	for( auto &it : mSubViews ) {
-		it->setOrigin( it->getOrigin( false ) - tl + vec2( mPadding.mRight, mPadding.mBottom ) );
-	}
+		vec2 tl = vec2( minX, minY );
+		for( auto &it : mSubViews ) {
+			it->setOrigin( it->getOrigin( false ) - tl + vec2( mPadding.mRight, mPadding.mBottom ) );
+		}
 
-	Rectf bounds( minX, minY, maxX, maxY );
-	setSize( bounds.getSize() + vec2( mPadding.mLeft + mPadding.mRight, mPadding.mTop + mPadding.mBottom ) );
+		Rectf bounds( minX, minY, maxX, maxY );
+		setSize( bounds.getSize() + vec2( mPadding.mLeft + mPadding.mRight, mPadding.mTop + mPadding.mBottom ) );
+	}
+	else {
+		setSize( vec2( 0, 0 ) );
+	}
 }
 
 void View::addPoint( vector<RenderData> &data, const ColorA &color, const vec2 &p, float pointSize )
@@ -666,6 +671,11 @@ ViewRef View::getSubView( std::string subViewName, int subViewID )
 		}
 	}
 	return nullptr;
+}
+
+vector<ViewRef> View::getSubViews()
+{
+	return mSubViews;
 }
 
 #if defined( CINDER_COCOA_TOUCH )

@@ -73,7 +73,12 @@ template <typename T>
 void SliderT<T>::load( const ci::JsonTree &data )
 {
 	if( data.hasChild( "VALUE" ) ) {
-		setValue( data.getValueForKey<T>( "VALUE" ) );
+		try {
+			setValue( data.getValueForKey<T>( "VALUE" ) );
+		}
+		catch( Exception exc ) {
+			cout << exc.what() << endl;
+		}
 		if( mTriggerOnLoad ) {
 			trigger();
 		}
