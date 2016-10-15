@@ -7,30 +7,30 @@
          "ID" : 7,
          "NAME" : "RED",
          "TYPE" : "Slider",
-         "VALUE" : 1
+         "VALUE" : 0.22549019753932953
       },
       {
          "ID" : 10,
          "NAME" : "GREEN",
          "TYPE" : "Slider",
-         "VALUE" : 0.12745098769664764
+         "VALUE" : 0.23529411852359772
       },
       {
          "ID" : 13,
          "NAME" : "BLUE",
          "TYPE" : "Slider",
-         "VALUE" : 0.36274510622024536
+         "VALUE" : 0.10784313827753067
       },
       {
-         "BLUE" : 0.36274510622024536,
-         "GREEN" : 0.12745098769664764,
+         "BLUE" : 0.10784313827753067,
+         "GREEN" : 0.23529411852359772,
          "ID" : 14,
          "NAME" : "BG COLOR",
-         "RED" : 1,
+         "RED" : 0.22549019753932953,
          "TYPE" : "MultiSlider"
       }
    ],
    "TYPE" : "SuperCanvas",
-   "XPOS" : 103,
-   "YPOS" : 128
+   "XPOS" : 25,
+   "YPOS" : 21
 }

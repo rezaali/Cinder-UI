@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -13,13 +14,13 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
     <Filter Include="Blocks">
-      <UniqueIdentifier>{3733772C-F691-4A3B-B6DE-E3B6F0802A07}</UniqueIdentifier>
+      <UniqueIdentifier>{9169BC4B-73C3-45FA-9D73-1F505010C3E3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Blocks\UI">
-      <UniqueIdentifier>{A29E38EC-003F-449B-BE93-A90DE4C48702}</UniqueIdentifier>
+      <UniqueIdentifier>{CA740740-F3E4-435C-9A8B-24068080F025}</UniqueIdentifier>
     </Filter>
     <Filter Include="Blocks\UI\src">
-      <UniqueIdentifier>{557921FB-E7A1-4E51-803C-3CCC6249A989}</UniqueIdentifier>
+      <UniqueIdentifier>{505F7A74-A7BC-46BD-86A7-50D20071CC98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +64,6 @@
       <Filter>Blocks\UI\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Directions.h">
-      <Filter>Blocks\UI\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\Envelope.h">
       <Filter>Blocks\UI\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\FontSizes.h">
@@ -146,9 +144,6 @@
     <ClInclude Include="..\..\..\src\Waveform.h">
       <Filter>Blocks\UI\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\WindowCanvas.h">
-      <Filter>Blocks\UI\src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\XYPad.h">
       <Filter>Blocks\UI\src</Filter>
     </ClInclude>
@@ -174,9 +169,6 @@
       <Filter>Blocks\UI\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Dialer.cpp">
-      <Filter>Blocks\UI\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Envelope.cpp">
       <Filter>Blocks\UI\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Fps.cpp">
@@ -236,16 +228,19 @@
     <ClCompile Include="..\..\..\src\Waveform.cpp">
       <Filter>Blocks\UI\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\WindowCanvas.cpp">
+    <ClCompile Include="..\..\..\src\XYPad.cpp">
       <Filter>Blocks\UI\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\XYPad.cpp">
+    <ClCompile Include="..\..\..\src\Envelope.cpp">
       <Filter>Blocks\UI\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Envelope.h">
+      <Filter>Blocks\UI\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

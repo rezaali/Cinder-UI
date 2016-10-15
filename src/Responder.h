@@ -1,8 +1,6 @@
+#include <string>
+
 #pragma once
-
-#include "cinder/app/App.h"
-
-using namespace std;
 
 namespace reza { namespace ui {
     
