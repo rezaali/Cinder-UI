@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+#include <iostream>
+#include <iomanip>
+
 namespace reza {
 namespace ui {
 
