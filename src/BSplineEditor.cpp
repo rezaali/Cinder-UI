@@ -77,7 +77,7 @@ void BSplineEditor::load( const ci::JsonTree &data )
 	if( data.hasChild( "POINTS" ) ) {
 		auto pts = data.getChild( "POINTS" );
 		int total = pts.getNumChildren();
-		if( mControlPoints.size() < total ) {
+		if( (int)mControlPoints.size() < total ) {
 			mControlPoints.resize( total );
 		}
 		for( int i = 0; i < total; i++ ) {
@@ -272,7 +272,7 @@ std::vector<RenderData> BSplineEditor::render()
 void BSplineEditor::drawOutline( std::vector<RenderData> &data, const ci::ColorA &color )
 {
 	if( mFormat.mGrid ) {
-		addPointGrid( data, color, mHitRect, mFormat.mGridSize );
+		addPointGrid( data, color, mHitRect, (float)mFormat.mGridSize );
 	}
 	Control::drawOutline( data, color );
 }
@@ -375,7 +375,7 @@ void BSplineEditor::input( const ci::app::MouseEvent &event )
 			addToEnd = false;
 		}
 		else {
-			float thres = 0.1 * length( mFormat.mMax - mFormat.mMin );
+			float thres = 0.1f * length( mFormat.mMax - mFormat.mMin );
 			float tpp = 1.0f / float( totalCtrlPts - 1.0f );
 			float bestDistance = 1000000;
 			float bestTime = -1;
@@ -392,7 +392,7 @@ void BSplineEditor::input( const ci::app::MouseEvent &event )
 					float startTime = bid * tpp;
 					float endTime = eid * tpp;
 
-					for( float t = startTime; t <= endTime; t += 0.01 ) {
+					for( float t = startTime; t <= endTime; t += 0.01f ) {
 						vec2 pt = mSplineRef->getPosition( t );
 						float d = length( hp - pt );
 						if( d < bestDistance ) {
@@ -499,7 +499,8 @@ void BSplineEditor::mouseDrag( ci::app::MouseEvent &event )
 
 bool BSplineEditor::isValid()
 {
-	mValid = ( ( mControlPoints.size() >= 2 ) && ( mDegree > 0 ) && ( mDegree <= ( mControlPoints.size() - 1 ) ) );
+	int cpSize = (int)mControlPoints.size();
+	mValid = ( ( cpSize >= 2 ) && ( mDegree > 0 ) && ( mDegree <= ( cpSize - 1 ) ) );
 	return mValid;
 }
 

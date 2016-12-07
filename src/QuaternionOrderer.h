@@ -15,8 +15,8 @@ class QuaternionOrderer : public ControlWithLabel {
 			mFontSize = FontSize::SMALL;
 			mLabel = true;
 			mHeight = -1;
-			mStickyValue = 0.01;
-			mThreshold = 0.01;
+			mStickyValue = 0.01f;
+			mThreshold = 0.01f;
 
 			mShowTime = false;
 			mTimeRef = nullptr;
@@ -48,7 +48,7 @@ class QuaternionOrderer : public ControlWithLabel {
 		}
 		Format &height( int height )
 		{
-			mHeight = height;
+			mHeight = (float)height;
 			return *this;
 		}
 		Format &stickyValue( float value )

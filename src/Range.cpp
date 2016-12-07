@@ -95,8 +95,8 @@ template <typename T>
 void RangeT<T>::setValue( T valueLow, T valueHigh )
 {
 	if( mStickyEnabled && mFormat.mSticky ) {
-		valueLow = ceil( valueLow / mFormat.mStickyValue ) * mFormat.mStickyValue;
-		valueHigh = ceil( valueHigh / mFormat.mStickyValue ) * mFormat.mStickyValue;
+		valueLow = (float)ceil( (double)valueLow / mFormat.mStickyValue ) * mFormat.mStickyValue;
+		valueHigh = (float)ceil( (double)valueHigh / mFormat.mStickyValue ) * mFormat.mStickyValue;
 	}
 
 	mValueLow = lmap<double>( valueLow, mMin, mMax, 0.0, 1.0 );

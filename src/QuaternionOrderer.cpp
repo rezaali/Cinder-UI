@@ -61,7 +61,7 @@ void QuaternionOrderer::drawFill( std::vector<RenderData> &data, const ci::Color
 
 	map<float, quat> map;
 
-	for( int i = 0; i < mTimes.size(); i++ ) {
+	for( int i = 0; i < (int)mTimes.size(); i++ ) {
 		map[mTimes[i]] = mQuats[i];
 	}
 
@@ -214,7 +214,7 @@ quat QuaternionOrderer::getQuat( float time )
 	}
 	else if( mQuats.size() > 1 ) {
 		map<float, quat> quatMap;
-		for( int i = 0; i < mQuats.size(); i++ ) {
+		for( int i = 0; i < (int)mQuats.size(); i++ ) {
 			quatMap[mTimes[i]] = mQuats[i];
 		}
 
@@ -233,7 +233,7 @@ quat QuaternionOrderer::getQuat( float time )
 		int bi = -1;
 		float bd = 1000;
 
-		for( int i = 0; i < times.size(); i++ ) {
+		for( int i = 0; i < (int)times.size(); i++ ) {
 			float d = fabsf( times[i] - t );
 			if( d < bd ) {
 				bd = d;
@@ -303,7 +303,7 @@ void QuaternionOrderer::input( const ci::app::MouseEvent &event )
 	}
 	else if( mHitIndex == -1 ) {
 		float bd = 1000;
-		for( int i = 0; i < mTimes.size(); i++ ) {
+		for( int i = 0; i < (int)mTimes.size(); i++ ) {
 			float d = fabsf( mTimes[i] - hp.x );
 			if( d < bd ) {
 				bd = d;

@@ -22,9 +22,9 @@ class BSplineEditor : public ControlWithLabel {
 			mHeight = -1;
 			mMin = glm::vec2( -1.0 );
 			mMax = glm::vec2( 1.0 );
-			mStickyValue = 0.05;
+			mStickyValue = 0.05f;
 			mResolution = 100;
-			mThreshold = 0.05;
+			mThreshold = 0.05f;
 			mShowTime = false;
 			mTimeRef = nullptr;
 			mTime = 0.0f;
@@ -68,7 +68,7 @@ class BSplineEditor : public ControlWithLabel {
 		}
 		Format &height( int height )
 		{
-			mHeight = height;
+			mHeight = (float)height;
 			return *this;
 		}
 		Format &min( glm::vec2 min )

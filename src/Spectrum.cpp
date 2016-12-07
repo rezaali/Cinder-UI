@@ -10,7 +10,7 @@ Spectrum::Spectrum( std::string name, int bufferSize, float *values, glm::vec2 r
 {
 	mXValues = new float[mBufferSize];
 	for( int i = 0; i < mBufferSize; i++ ) {
-		mXValues[i] = lmap<float>( i, 0.0, mBufferSize - 1.0f, 0.0, 1.0 );
+		mXValues[i] = lmap<float>( (float)i, 0.0, mBufferSize - 1.0f, 0.0f, 1.0f );
 	}
 	setClosed( false );
 	setDrawFill( true );

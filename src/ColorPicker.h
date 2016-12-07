@@ -43,7 +43,7 @@ class ColorPicker : public ControlWithLabel {
 			mSensitivity = sensitivity;
 			return *this;
 		}
-		Format &relative( float relative = true )
+		Format &relative( bool relative = true )
 		{
 			mRelative = relative;
 			return *this;

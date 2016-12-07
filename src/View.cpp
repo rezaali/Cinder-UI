@@ -423,7 +423,7 @@ void View::autoSizeToFitSubviews()
 
 void View::addPoint( vector<RenderData> &data, const ColorA &color, const vec2 &p, float pointSize )
 {
-	float off = pointSize * 0.5;
+	float off = pointSize * 0.5f;
 	addRect( data, color, Rectf( p.x - off, p.y - off, p.x + off, p.y + off ) );
 }
 
@@ -437,7 +437,7 @@ void View::addCircle( vector<RenderData> &data, const ColorA &color, const vec2 
 		pt += offset;
 	}
 
-	float incAngle = 2.0f * M_PI / (float)resolution;
+	float incAngle = 2.0f * (float)M_PI / (float)resolution;
 	for( int i = 0; i < resolution; i++ ) {
 		float theta = i * incAngle;
 		float thetaNext = ( i + 1 ) * incAngle;
@@ -598,11 +598,11 @@ void View::addPointGrid( std::vector<RenderData> &data, const ci::ColorA &color,
 	float w = rect.getWidth();
 	float h = rect.getHeight();
 
-	float hw = w * 0.5;
-	float hh = h * 0.5;
+	float hw = w * 0.5f;
+	float hh = h * 0.5f;
 
-	for( int x = 0; x <= hw; x += gridInterval ) {
-		for( int y = 0; y <= hh; y += gridInterval ) {
+	for( float x = 0; x <= hw; x += gridInterval ) {
+		for( float y = 0; y <= hh; y += gridInterval ) {
 			addPoint( data, color, offset + vec2( hw + x, hh + y ), pointSize );
 			addPoint( data, color, offset + vec2( hw - x, hh + y ), pointSize );
 			addPoint( data, color, offset + vec2( hw - x, hh - y ), pointSize );
@@ -618,8 +618,8 @@ void View::addCenterLines( std::vector<RenderData> &data, const ci::ColorA &colo
 	float w = rect.getWidth();
 	float h = rect.getHeight();
 
-	float hw = w * 0.5;
-	float hh = h * 0.5;
+	float hw = w * 0.5f;
+	float hh = h * 0.5f;
 
 	addLine( data, color, offset + vec2( 0, hh ), offset + vec2( w, hh ), lineWidth );
 	addLine( data, color, offset + vec2( hw, 0 ), offset + vec2( hw, h ), lineWidth );

@@ -35,7 +35,7 @@ void Plotter::update()
 	if( mUpdateAlways || mValues.back() != *mValue ) {
 		mValues.push_back( *mValue );
 		setLabel( mName + ":" + to_string( *mValue ) );
-		while( mValues.size() > mBufferSize ) {
+		while( (int)mValues.size() > mBufferSize ) {
 			mValues.pop_front();
 		}
 		setNeedsDisplay();
@@ -57,7 +57,7 @@ void Plotter::drawFill( std::vector<RenderData> &data, const ci::ColorA &color )
 	float h = getHeight() - ( mPadding.mTop + mPadding.mBottom );
 
 	vec2 offset = vec2( mPadding.mLeft, mPadding.mTop );
-	int limit = mBufferSize - 1.0;
+	int limit = mBufferSize - 1;
 	for( int i = 0; i < limit; i++ ) {
 		int prevIndex = i;
 		int nextIndex = ( prevIndex + 1 );

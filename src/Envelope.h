@@ -15,8 +15,8 @@ class Envelope : public ControlWithLabel {
 			mFontSize = FontSize::SMALL;
 			mLabel = true;
 			mHeight = -1;
-			mStickyValue = 0.01;
-			mThreshold = 0.01;
+			mStickyValue = 0.01f;
+			mThreshold = 0.01f;
 			mMin = 0.0f;
 			mMax = 1.0f;
 			mShowTime = false;
@@ -50,7 +50,7 @@ class Envelope : public ControlWithLabel {
 		}
 		Format &height( int height )
 		{
-			mHeight = height;
+			mHeight = (float)height;
 			return *this;
 		}
 		Format &stickyValue( float value )

@@ -44,7 +44,7 @@ template <typename T>
 void SliderT<T>::update()
 {
 	if( mUseRef ) {
-		T scaledValue = lmap<double>( mValue, 0.0, 1.0, mMin, mMax );
+		T scaledValue = lmap<double>( (double)mValue, 0.0, 1.0, mMin, mMax );
 		if( ( *mValueRef ) != scaledValue ) {
 			setValue( *mValueRef );
 		}
@@ -65,7 +65,7 @@ template <typename T>
 JsonTree SliderT<T>::save()
 {
 	JsonTree tree = View::save();
-	tree.addChild( JsonTree( "VALUE", std::isnan( getValue() ) ? mMin : getValue() ) );
+	tree.addChild( JsonTree( "VALUE", std::isnan( (double)getValue() ) ? mMin : getValue() ) );
 	return tree;
 }
 
@@ -104,13 +104,13 @@ T SliderT<T>::getValue()
 template <typename T>
 double SliderT<T>::getNormalizedValue()
 {
-	return std::max( std::min( mValue, 1.0 ), 0.0 );
+	return std::max( std::min( (double)mValue, 1.0 ), 0.0 );
 }
 
 template <typename T>
 void SliderT<T>::updateValueRef()
 {
-	*mValueRef = lmap<double>( mValue, 0.0, 1.0, mMin, mMax );
+	*mValueRef = lmap<double>( (double)mValue, 0.0, 1.0, mMin, mMax );
 }
 
 template <typename T>
@@ -163,7 +163,7 @@ void SliderT<T>::setMinAndMax( T min, T max, bool keepValueTheSame )
 	mMin = min;
 
 	if( !keepValueTheSame ) {
-		setValue( lmap<double>( getNormalizedValue(), 0.0, 1.0, min, max ) );
+		setValue( lmap<double>( (double)getNormalizedValue(), 0.0, 1.0, min, max ) );
 	}
 }
 
@@ -183,13 +183,13 @@ void SliderT<T>::drawFill( std::vector<RenderData> &data, const ci::ColorA &colo
 	Rectf rect = mHitRect;
 	if( mFormat.mCrossFader ) {
 		float h = mHitRect.getHeight();
-		float hh = h * 0.5;
-		rect.x2 = rect.x1 + ( rect.getWidth() - h ) * getNormalizedValue() + hh;
+		float hh = h * 0.5f;
+		rect.x2 = rect.x1 + ( rect.getWidth() - h ) * (float)getNormalizedValue() + hh;
 		rect.x1 = rect.x2 - hh;
 		rect.x2 = rect.x1 + h;
 	}
 	else {
-		rect.x2 = rect.x1 + rect.getWidth() * getNormalizedValue();
+		rect.x2 = rect.x1 + rect.getWidth() * (float)getNormalizedValue();
 	}
 	addRect( data, color, rect );
 }
@@ -206,9 +206,9 @@ void SliderT<T>::input( ci::app::MouseEvent &event )
 	vec2 hp = getHitPercent( event.getPos() );
 	hp.x = std::min( std::max( hp.x, 0.0f ), 1.0f );
 
-	float value = lmap<double>( hp.x, 0.0, 1.0, mMin, mMax );
+	T value = lmap<double>( (double)hp.x, 0.0, 1.0, mMin, mMax );
 	if( mFormat.mSticky || event.isMetaDown() ) {
-		value = ceil( value / mFormat.mStickyValue ) * mFormat.mStickyValue;
+		value = (float)ceil( (double)value / (double)mFormat.mStickyValue ) * mFormat.mStickyValue;
 	}
 
 	setValue( value );

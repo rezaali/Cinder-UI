@@ -90,7 +90,7 @@ void SuperCanvas::mouseDown( ci::app::MouseEvent &event )
 			}
 			return;
 		}
-		mLastHitTime = ci::app::getElapsedSeconds();
+		mLastHitTime = (float)ci::app::getElapsedSeconds();
 	}
 	Canvas::mouseDown( event );
 }

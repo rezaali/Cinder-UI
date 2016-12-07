@@ -16,7 +16,7 @@ MultiSlider::MultiSlider( std::string name, const std::vector<Data> data, Format
 
 void MultiSlider::setup()
 {
-	float numSliders = mData.size();
+	float numSliders = (float)mData.size();
 	vec2 size = getSize();
 	size.y = mSliderHeight = std::max( size.y - mPadding.mTop - mPadding.mBottom,
 		( (float)FontSize::SMALL + mPadding.mBottom + mPadding.mTop ) );
@@ -42,7 +42,7 @@ void MultiSlider::setup()
 		addSubView( label );
 
 		float labelHeight = label->getHeight();
-		float offset = ( rect.getHeight() - labelHeight ) / 2.0;
+		float offset = ( rect.getHeight() - labelHeight ) / 2.0f;
 		label->setOrigin( vec2( rect.x1, rect.y1 + offset ) );
 		index++;
 	}
@@ -52,7 +52,7 @@ void MultiSlider::setup()
 void MultiSlider::update()
 {
 	for( auto &it : mData ) {
-		float scaledValue = lmap<double>( it.mValue, 0.0, 1.0, it.mMin, it.mMax );
+		float scaledValue = (float)lmap<double>( it.mValue, 0.0, 1.0, it.mMin, it.mMax );
 		if( ( *it.mValueRef ) != scaledValue ) {
 			setValue( it.mKey, *it.mValueRef );
 		}
@@ -64,7 +64,7 @@ void MultiSlider::setValue( float value )
 {
 	for( auto &it : mDataMap ) {
 		Data *data = it.second;
-		setValue( it.first, lmap<double>( value, 0.0, 1.0, data->mMin, data->mMax ) );
+		setValue( it.first, (float)lmap<double>( value, 0.0, 1.0, data->mMin, data->mMax ) );
 	}
 }
 
@@ -84,13 +84,13 @@ float MultiSlider::getValue( const std::string key )
 
 float MultiSlider::getNormalizedValue( const std::string key )
 {
-	return std::max( std::min( mDataMap[key]->mValue, 1.0 ), 0.0 );
+	return std::max( std::min( (float)mDataMap[key]->mValue, 1.0f ), 0.0f );
 }
 
 void MultiSlider::updateValueRef( const std::string key )
 {
 	Data *data = mDataMap[key];
-	*data->mValueRef = lmap<double>( data->mValue, 0.0, 1.0, data->mMin, data->mMax );
+	*data->mValueRef = (float)lmap<double>( data->mValue, 0.0, 1.0, data->mMin, data->mMax );
 }
 
 void MultiSlider::updateLabel( const std::string key )

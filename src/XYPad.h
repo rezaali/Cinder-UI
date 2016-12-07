@@ -20,7 +20,7 @@ class XYPad : public ControlWithLabel {
 			mHeight = -1;
 			mMin = glm::vec2( -1.0 );
 			mMax = glm::vec2( 1.0 );
-			mStickyValue = 0.05;
+			mStickyValue = 0.05f;
 		}
 		Format( const Format &copy )
 		{
@@ -44,7 +44,7 @@ class XYPad : public ControlWithLabel {
 		}
 		Format &height( int height )
 		{
-			mHeight = height;
+			mHeight = (float)height;
 			return *this;
 		}
 		Format &min( glm::vec2 min )

@@ -34,7 +34,7 @@ void TextInput::setup()
 		addSubView( mLabelRef );
 		mLabelRef->setOrigin( vec2( mLabelRef->getSpacing(), mPadding.mTop ) );
 		mCharWidth = mLabelRef->getStringWidth( " " ) + mLabelRef->getSpacing();
-		mMaxDisplayLength = floor( ( getWidth() - mPadding.mLeft - mPadding.mRight ) / mCharWidth );
+		mMaxDisplayLength = (int)floor( ( getWidth() - mPadding.mLeft - mPadding.mRight ) / mCharWidth );
 		setSize( vec2( getWidth(), mLabelRef->getHeight() + mPadding.mTop + mPadding.mBottom ) );
 		setValue( mName );
 	}
@@ -107,7 +107,7 @@ void TextInput::drawFill( std::vector<RenderData> &data, const ci::ColorA &color
 		}
 
 		rect.y1 -= mPadding.mTop * 0.5f;
-		rect.x2 = rect.x1 + 1.0;
+		rect.x2 = rect.x1 + 1.0f;
 		rect.y2 = rect.y1 + (int)mFormat.mFontSize + mPadding.mBottom;
 
 		addRect( data, color, rect );
@@ -120,8 +120,8 @@ void TextInput::drawFill( std::vector<RenderData> &data, const ci::ColorA &color
 void TextInput::calculateCursorPosition( const glm::vec2 &pt )
 {
 	vec2 ht = mLabelRef->getHitPercent( pt );
-	int charIndex = round( ( ht.x * mLabelRef->getWidth() ) / mCharWidth );
-	if( charIndex > mDisplayValue.length() ) {
+	int charIndex =(int)round( ( ht.x * mLabelRef->getWidth() ) / mCharWidth );
+	if( charIndex > (int)mDisplayValue.length() ) {
 		charIndex = mDisplayValue.length();
 	}
 	mCursorPosition = charIndex;
@@ -137,7 +137,7 @@ void TextInput::insertCharacter( const std::string &s )
 	else {
 		mValue.insert( mStartIndex + mCursorPosition, s );
 		mCursorPosition++;
-		if( mValue.length() > mMaxDisplayLength ) {
+		if( (int)mValue.length() > mMaxDisplayLength ) {
 			mDisplayValue = mValue.substr( mStartIndex, mMaxDisplayLength );
 		}
 		else {
@@ -245,12 +245,12 @@ void TextInput::keyDown( ci::app::KeyEvent &event )
 		else {
 			switch( event.getCode() ) {
 			case KeyEvent::KEY_RIGHT: {
-				if( mCursorPosition == mMaxDisplayLength && mValue.substr( mStartIndex ).length() > mMaxDisplayLength ) {
+				if( mCursorPosition == mMaxDisplayLength && (int)mValue.substr( mStartIndex ).length() > mMaxDisplayLength ) {
 					mStartIndex++;
 					mDisplayValue = mValue.substr( mStartIndex, mMaxDisplayLength );
 					mLabelRef->setLabel( mDisplayValue );
 				}
-				else if( mCursorPosition < mDisplayValue.length() ) {
+				else if( mCursorPosition < (int)mDisplayValue.length() ) {
 					mCursorPosition = mCursorPosition + 1;
 				}
 				setNeedsDisplay();
