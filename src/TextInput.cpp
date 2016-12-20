@@ -76,16 +76,16 @@ void TextInput::setValue( std::string value )
 {
 	if( mLabelRef ) {
 		mValue = value;
-		int length = mValue.length();
+		int length = (int)mValue.length();
 		if( length > mMaxDisplayLength ) {
-			mStartIndex = mValue.length() - mMaxDisplayLength;
+			mStartIndex = (int)mValue.length() - mMaxDisplayLength;
 			mDisplayValue = mValue.substr( mStartIndex, mMaxDisplayLength );
 			mCursorPosition = mMaxDisplayLength;
 		}
 		else {
 			mDisplayValue = mValue;
 			mStartIndex = 0;
-			mCursorPosition = mDisplayValue.length();
+			mCursorPosition = (int)mDisplayValue.length();
 		}
 		mLabelRef->setLabel( mDisplayValue );
 	}
@@ -122,7 +122,7 @@ void TextInput::calculateCursorPosition( const glm::vec2 &pt )
 	vec2 ht = mLabelRef->getHitPercent( pt );
 	int charIndex =(int)round( ( ht.x * mLabelRef->getWidth() ) / mCharWidth );
 	if( charIndex > (int)mDisplayValue.length() ) {
-		charIndex = mDisplayValue.length();
+		charIndex = (int)mDisplayValue.length();
 	}
 	mCursorPosition = charIndex;
 }
@@ -152,7 +152,7 @@ void TextInput::insertCharacter( const std::string &s )
 
 void TextInput::deleteCharacter()
 {
-	int length = mValue.length();
+	int length = (int)mValue.length();
 	if( length ) {
 		int charIndex = mCursorPosition - 1;
 		int index = mStartIndex + std::max( charIndex, 0 );

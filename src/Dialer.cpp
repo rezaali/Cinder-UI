@@ -149,7 +149,7 @@ void DialerT<T>::updateLabel()
 		label += ( value > 0 ? "+" : "-" );
 	}
 
-	label += toString( fabs( value ), mFormat.mPrecision, mSetWidth, '0' );
+	label += toString( fabs( (float)value ), mFormat.mPrecision, mSetWidth, '0' );
 
 	if( mFormat.mLabel ) {
 		label += " " + mName;

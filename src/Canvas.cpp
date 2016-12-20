@@ -1,4 +1,8 @@
+#include "cinder/Log.h"
 #include "cinder/gl/scoped.h"
+#include "cinder/gl/Context.h"
+#include "cinder/gl/draw.h"
+#include "cinder/app/Window.h"
 
 #include "Canvas.h"
 #include "Globals.h"
@@ -49,7 +53,9 @@ void Canvas::load( const ci::fs::path &path )
 			}
 		}
 		catch( ci::Exception exc ) {
-			std::cout << "CANVAS LOAD ERROR: " << exc.what() << std::endl;
+			string message = "CANVAS LOAD ERROR: ";
+			message += (string)exc.what();
+			CI_LOG_E( message );
 		}
 	}
 }
@@ -91,7 +97,7 @@ void Canvas::setEnabled( bool enabled )
 void Canvas::enable()
 {
 	mEnabled = true;
-	if( mWindowRef && mWindowRef->isValid() ) {
+	if( mWindowRef != nullptr && mWindowRef->isValid() ) {
 		enableUpdateCallback();
 #if defined( CINDER_COCOA_TOUCH )
 		enableTouchCallbacks();
@@ -105,15 +111,13 @@ void Canvas::enable()
 void Canvas::disable()
 {
 	mEnabled = false;
-	if( mWindowRef && mWindowRef->isValid() ) {
-		disableUpdateCallback();
+	disableUpdateCallback();
 #if defined( CINDER_COCOA_TOUCH )
-		disableTouchCallbacks();
+	disableTouchCallbacks();
 #else
-		disableMouseCallbacks();
-		disableKeyboardCallbacks();
+	disableMouseCallbacks();
+	disableKeyboardCallbacks();
 #endif
-	}
 }
 
 void Canvas::clearPlacer()
@@ -360,38 +364,36 @@ void Canvas::enableUpdateCallback()
 }
 
 void Canvas::draw()
-{
+{	
+	mWindowRef->getRenderer()->makeCurrentContext(true); 
+
 	if( !mSetup ) {
 		setup();
 	}
 
 	getRenderData();
 
-	if( !mGlslProgRef ) {
+	if( mGlslProgRef == nullptr ) {
 		setupShader();
+		return; 
 	}
-	else {
-		gl::ScopedDepthTest scpDrd( false );
-		gl::ScopedDepthWrite scpDwt( false );
-		gl::ScopedBlendAlpha scpAlp;
-		gl::pushMatrices();
-		//		gl::setMatricesWindow( getSize() );
 
-		gl::ScopedVao scopedVao( mVaoRef );
-		gl::ScopedGlslProg scopedShader( mGlslProgRef );
+	gl::ScopedColor scpClr( Color::white() );
+	gl::enableAlphaBlending(); 
+	gl::enableDepth(false); 
 
-		mGlslProgRef->uniform( "uModelViewProjection", gl::getModelViewProjection() );
+	gl::pushMatrices();
 
-		gl::enableAlphaBlending();
-		gl::disableDepthRead();
+	mGlslProgRef->uniform("uModelViewProjection", gl::getModelViewProjection());
+	
+	gl::ScopedGlslProg glsl(mGlslProgRef);
+	gl::ScopedVao vao(mVaoRef); 
 
-		glDisable( GL_CULL_FACE );
-		glDrawArrays( GL_TRIANGLES, 0, mRenderData.size() );
+	glDrawArrays( GL_TRIANGLES, 0, mRenderData.size() );
 
-		View::draw();
+	View::draw();
 
-		gl::popMatrices();
-	}
+	gl::popMatrices();
 }
 
 void Canvas::disableUpdateCallback()
@@ -476,7 +478,7 @@ void Canvas::setupShader()
 {
 	try {
 		mGlslProgRef = gl::GlslProg::create( gl::GlslProg::Format()
-												 .vertex( CI_GLSL( 330,
+												 .vertex( CI_GLSL( 150,
 																   uniform mat4 uModelViewProjection;
 
 																   in vec3 iPosition;
@@ -491,7 +493,7 @@ void Canvas::setupShader()
 																	   vUv = iUv;
 																	   gl_Position = uModelViewProjection * vec4( iPosition, 1.0 );
 																   } ) )
-												 .fragment( CI_GLSL( 330, in vec2 vUv; in vec4 vColor;
+												 .fragment( CI_GLSL( 150, in vec2 vUv; in vec4 vColor;
 
 																	 out vec4 oColor;
 
@@ -503,8 +505,8 @@ void Canvas::setupShader()
 												 .attribLocation( "iColor", 2 ) );
 	}
 	catch( gl::GlslProgCompileExc exc ) {
-		cout << "Problem Compiling UI Shader" << endl
-			 << exc.what() << endl;
+		string message = "Problem Compiling UI Shader" + (string)exc.what();
+		CI_LOG_E( message );
 	}
 }
 
@@ -515,6 +517,7 @@ void Canvas::setupBuffers()
 		mRenderData.data(),
 		GL_DYNAMIC_DRAW );
 	mVaoRef = gl::Vao::create();
+
 
 	gl::ScopedVao scopedVao( mVaoRef );
 	gl::ScopedBuffer scopedBuffer( mVboRef );
@@ -881,7 +884,7 @@ void Canvas::down()
 vector<RenderData> &Canvas::getRenderData()
 {
 	size_t index = 0;
-	if( mSetNeedsDisplay ) {
+	if( mSetNeedsDisplay ) {		
 		mViewRenderData = render();
 		if( mRenderData.size() < mViewRenderData.size() ) {
 			mRenderData.insert( mRenderData.begin(), mViewRenderData.begin(), mViewRenderData.end() );

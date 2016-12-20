@@ -69,7 +69,7 @@ void View::load( const JsonTree &data )
 {
 	if( data.hasChild( "SUBVIEWS" ) && mLoadSubViews ) {
 		const JsonTree &tree = data.getChild( "SUBVIEWS" );
-		int numSubViews = tree.getNumChildren();
+		int numSubViews = (int)tree.getNumChildren();
 		for( int i = 0; i < numSubViews; i++ ) {
 			const JsonTree &sub = tree[i];
 			string name = sub.getValueForKey( "NAME" );
@@ -467,7 +467,7 @@ void View::addCircle( vector<RenderData> &data, const ColorA &color, const vec2 
 void View::addLine( vector<RenderData> &data, const ColorA &color, const vec2 &p0, const vec2 &p1, float lineWidth )
 {
 	//Insert Render Data Needed
-	int offset = data.size();
+	int offset = (int)data.size();
 	data.push_back( RenderData() );
 	data.push_back( RenderData() );
 	data.push_back( RenderData() );
@@ -532,7 +532,7 @@ void View::addBoundsOutline( vector<RenderData> &data, const ColorA &color, floa
 
 void View::addRect( vector<RenderData> &data, const ColorA &color, const Rectf &rect, float z )
 {
-	int offset = data.size();
+	int offset = (int)data.size();
 
 	data.push_back( RenderData() );
 	data.push_back( RenderData() );
