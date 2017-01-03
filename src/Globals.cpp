@@ -8,6 +8,8 @@ float Padding = 2.0f;
 
 #if defined( CINDER_COCOA )
 float CanvasWidth = 212.0f;
+#elif defined( CINDER_LINUX )
+float CanvasWidth = 212.0f;
 #elif defined( CINDER_MSW )
 float CanvasWidth = 242.0f;
 #endif
