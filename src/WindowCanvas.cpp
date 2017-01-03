@@ -1,9 +1,9 @@
 #include "WindowCanvas.h"
 
+#include "cinder/Log.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/wrapper.h"
-#include "cinder/Log.h"
 
 using namespace reza::ui;
 using namespace glm;
@@ -20,47 +20,48 @@ void WindowCanvas::setup()
 	if( mWindowRef == nullptr ) {
 		setWindow( createWindow() );
 	}
-	setDrawBack(false);
+	setDrawBack( false );
 	View::setup();
 }
 
 app::WindowRef WindowCanvas::createWindow()
-{	
+{
 	app::WindowRef window = app::App::get()->createWindow( app::Window::Format().renderer( app::RendererGl::create( app::RendererGl::Options().msaa( 0 ) ) ).size( getSize() ) );
 	std::string name = getName();
 	std::transform( name.begin(), name.end(), name.begin(), ::toupper );
 	window->setTitle( name );
-	window->getSignalMove().connect( [this] { if( isValid() ) { mWindowOrigin = mWindowRef->getPos(); } } );	
-	window->getSignalClose().connect([this] { 
+	window->getSignalMove().connect( [this] { if( isValid() ) { mWindowOrigin = mWindowRef->getPos(); } } );
+	window->getSignalClose().connect( [this] {
 		mValidRef = false;
-	});
-	window->getSignalDraw().connect([this] {
-		gl::setMatricesWindow(mWindowRef->getSize()); 
-		gl::clear(ColorA::black());
-	});
+		mWindowRef = nullptr;
+	} );
+	window->getSignalDraw().connect( [this, window] {
+		gl::setMatricesWindow( window->getSize() );
+		gl::clear( ColorA::black() );
+	} );
 	mValidRef = true;
 	return window;
 }
 
 void WindowCanvas::spawn()
-{	
-	if (!isValid()) {	
-		setWindow(createWindow());		
-		setPos(mWindowOrigin);
+{
+	if( !isValid() ) {
+		setWindow( createWindow() );
+		setPos( mWindowOrigin );
 		autoSizeToFitSubviews();
-		mRenderData.clear(); 
-		setNeedsDisplay(this, true, true); 
-		mSetup = false; 
-		mGlslProgRef = nullptr; 
-		setupBuffers(); 
+		mRenderData.clear();
+		setNeedsDisplay( this, true, true );
+		mSetup = false;
+		mGlslProgRef = nullptr;
+		setupBuffers();
 	}
 }
 
 void WindowCanvas::close()
 {
-	if (isValid()) {		
-		mValidRef = false; 
-		mWindowRef->close(); 
+	if( isValid() ) {
+		mValidRef = false;
+		mWindowRef->close();
 		mWindowRef = nullptr;
 	}
 }
