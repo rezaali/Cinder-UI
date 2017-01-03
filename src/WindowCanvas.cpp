@@ -24,6 +24,13 @@ void WindowCanvas::setup()
 	View::setup();
 }
 
+void WindowCanvas::update()
+{
+		if( !isValid() && mWindowRef->isValid() ) {
+			mWindowRef->close();
+		}
+}
+
 app::WindowRef WindowCanvas::createWindow()
 {
 	app::WindowRef window = app::App::get()->createWindow( app::Window::Format().renderer( app::RendererGl::create( app::RendererGl::Options().msaa( 0 ) ) ).size( getSize() ) );
@@ -61,8 +68,6 @@ void WindowCanvas::close()
 {
 	if( isValid() ) {
 		mValidRef = false;
-		mWindowRef->close();
-		mWindowRef = nullptr;
 	}
 }
 

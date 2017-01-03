@@ -31,6 +31,7 @@ class WindowCanvas : public Canvas {
   protected:
 	WindowCanvas( std::string title );
 	void setup() override;
+  void update() override; 
 
 	const std::string getType() override { return "WindowCanvas"; }
 	bool isSaveable() override { return true; }
