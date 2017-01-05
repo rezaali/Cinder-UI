@@ -1,8 +1,8 @@
 #include "cinder/Log.h"
-#include "cinder/gl/scoped.h"
+#include "cinder/app/Window.h"
 #include "cinder/gl/Context.h"
 #include "cinder/gl/draw.h"
-#include "cinder/app/Window.h"
+#include "cinder/gl/scoped.h"
 
 #include "Canvas.h"
 #include "Globals.h"
@@ -364,8 +364,10 @@ void Canvas::enableUpdateCallback()
 }
 
 void Canvas::draw()
-{	
-	mWindowRef->getRenderer()->makeCurrentContext(true); 
+{
+	if( mWindowRef ) {
+		mWindowRef->getRenderer()->makeCurrentContext( true );
+	}
 
 	if( !mSetup ) {
 		setup();
@@ -375,19 +377,19 @@ void Canvas::draw()
 
 	if( mGlslProgRef == nullptr ) {
 		setupShader();
-		return; 
+		return;
 	}
 
 	gl::ScopedColor scpClr( Color::white() );
-	gl::enableAlphaBlending(); 
-	gl::enableDepth(false); 
+	gl::enableAlphaBlending();
+	gl::enableDepth( false );
 
 	gl::pushMatrices();
 
-	mGlslProgRef->uniform("uModelViewProjection", gl::getModelViewProjection());
-	
-	gl::ScopedGlslProg glsl(mGlslProgRef);
-	gl::ScopedVao vao(mVaoRef); 
+	mGlslProgRef->uniform( "uModelViewProjection", gl::getModelViewProjection() );
+
+	gl::ScopedGlslProg glsl( mGlslProgRef );
+	gl::ScopedVao vao( mVaoRef );
 
 	glDrawArrays( GL_TRIANGLES, 0, mRenderData.size() );
 
@@ -517,7 +519,6 @@ void Canvas::setupBuffers()
 		mRenderData.data(),
 		GL_DYNAMIC_DRAW );
 	mVaoRef = gl::Vao::create();
-
 
 	gl::ScopedVao scopedVao( mVaoRef );
 	gl::ScopedBuffer scopedBuffer( mVboRef );
@@ -884,7 +885,7 @@ void Canvas::down()
 vector<RenderData> &Canvas::getRenderData()
 {
 	size_t index = 0;
-	if( mSetNeedsDisplay ) {		
+	if( mSetNeedsDisplay ) {
 		mViewRenderData = render();
 		if( mRenderData.size() < mViewRenderData.size() ) {
 			mRenderData.insert( mRenderData.begin(), mViewRenderData.begin(), mViewRenderData.end() );
