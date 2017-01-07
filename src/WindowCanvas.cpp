@@ -26,9 +26,9 @@ void WindowCanvas::setup()
 
 void WindowCanvas::update()
 {
-		if( !isValid() && mWindowRef->isValid() ) {
-			mWindowRef->close();
-		}
+	if( !isValid() && mWindowRef && mWindowRef->isValid() ) {
+		mWindowRef->close();
+	}
 }
 
 app::WindowRef WindowCanvas::createWindow()
@@ -67,7 +67,12 @@ void WindowCanvas::spawn()
 void WindowCanvas::close()
 {
 	if( isValid() ) {
+#if defined( CINDER_COCOA ) || defined( CINDER_LINUX )
 		mValidRef = false;
+#else //  defined( CINDER_COCOA ) || defined( CINDER_LINUX )
+		mWindowRef->close();
+		mWindowRef = nullptr;
+#endif
 	}
 }
 

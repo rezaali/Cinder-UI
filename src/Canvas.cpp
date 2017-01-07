@@ -365,8 +365,11 @@ void Canvas::enableUpdateCallback()
 
 void Canvas::draw()
 {
-	if( mWindowRef ) {
+	if( mWindowRef && mWindowRef->isValid() ) {
 		mWindowRef->getRenderer()->makeCurrentContext( true );
+	}
+	else {
+		return;
 	}
 
 	if( !mSetup ) {
