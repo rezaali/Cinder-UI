@@ -18,6 +18,13 @@ class CocoaWindowCanvas : public Canvas {
 		return ref;
 	}
 
+	static CocoaWindowCanvasRef create( std::string name )
+	{
+		CocoaWindowCanvasRef ref = CocoaWindowCanvasRef( new CocoaWindowCanvas( name, name ) );
+		ref->setup();
+		return ref;
+	}
+
 	void spawn();
 	void close();
 	bool isValid();
@@ -37,7 +44,7 @@ class CocoaWindowCanvas : public Canvas {
 	CocoaWindowCanvas( std::string name, std::string title );
 	void setup() override;
 
-	const std::string getType() override { return "CocoaWindowCanvas"; }
+	const std::string getType() override { return "WindowCanvas"; }
 	bool isSaveable() override { return true; }
 	cinder::app::AppCocoaView *createApp();
 	ci::app::WindowRef createWindow();
