@@ -70,6 +70,7 @@ void WindowCanvas::close()
 #if defined( CINDER_COCOA ) || defined( CINDER_LINUX )
 		mValidRef = false;
 #else //  defined( CINDER_COCOA ) || defined( CINDER_LINUX )
+		mValidRef = false;
 		mWindowRef->close();
 		mWindowRef = nullptr;
 #endif
