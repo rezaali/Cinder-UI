@@ -1,5 +1,5 @@
-#include "Helpers.h"
 #include "Slider.h"
+#include "Helpers.h"
 
 using namespace reza::ui;
 using namespace cinder;

@@ -12,6 +12,7 @@ SuperCanvas::SuperCanvas( std::string title, const ci::app::WindowRef &window )
 
 void SuperCanvas::setup()
 {
+	setSize( vec2( mCanvasWidth, mCanvasWidth ) );
 	if( !mLabelRef ) {
 		mLabelRef = Label::create( mName + "_LABEL", mName, FontSize::MEDIUM );
 		//        mLabelRef->setSize( vec2( getWidth() - mPadding.mLeft - mPadding.mRight, mLabelRef->getHeight() ) );
@@ -119,6 +120,7 @@ void SuperCanvas::clear()
 {
 	Canvas::clear();
 	mHeaderSubViews.clear();
+	mLabelRef = nullptr;
 	setup();
 }
 

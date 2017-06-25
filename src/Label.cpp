@@ -1,5 +1,5 @@
-#include "Colors.h"
 #include "Label.h"
+#include "Colors.h"
 #include "cinder/app/App.h"
 
 using namespace reza::ui;
