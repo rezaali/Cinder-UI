@@ -87,6 +87,30 @@ void SliderT<T>::load( const ci::JsonTree &data )
 }
 
 template <typename T>
+const std::string SliderT<T>::getType()
+{
+	return "Slider";
+}
+
+template <>
+const std::string SliderT<int>::getType()
+{
+	return "Slideri";
+}
+
+template <>
+const std::string SliderT<float>::getType()
+{
+	return "Sliderf";
+}
+
+template <>
+const std::string SliderT<double>::getType()
+{
+	return "Sliderd";
+}
+
+template <typename T>
 void SliderT<T>::setValue( T value )
 {
 	mValue = lmap<double>( value, mMin, mMax, 0.0, 1.0 );

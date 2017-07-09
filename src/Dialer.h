@@ -65,7 +65,7 @@ class DialerT : public ControlWithLabel {
 	DialerT( std::string name, T *value, T min, T max, Format format );
 	virtual ~DialerT();
 
-	const std::string getType() override { return "Dialer"; }
+	const std::string getType() override;
 	void setValue( T value );
 	T getValue();
 	double getNormalizedValue();

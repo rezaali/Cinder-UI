@@ -73,7 +73,8 @@ class SliderT : public ControlWithLabel {
 	SliderT( std::string name, T *value, T min, T max, Format format = Format() );
 	virtual ~SliderT();
 
-	const std::string getType() override { return "Slider"; }
+	const std::string getType() override;
+
 	void setValue( T value );
 	T getValue();
 	double getNormalizedValue();

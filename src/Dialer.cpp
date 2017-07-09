@@ -115,6 +115,30 @@ void DialerT<T>::load( const ci::JsonTree &data )
 }
 
 template <typename T>
+const std::string DialerT<T>::getType()
+{
+	return "Dialer";
+}
+
+template <>
+const std::string DialerT<int>::getType()
+{
+	return "Dialeri";
+}
+
+template <>
+const std::string DialerT<float>::getType()
+{
+	return "Dialerf";
+}
+
+template <>
+const std::string DialerT<double>::getType()
+{
+	return "Dialerd";
+}
+
+template <typename T>
 void DialerT<T>::setValue( T value )
 {
 	mValue = lmap<double>( value, mMin, mMax, 0.0, 1.0 );
