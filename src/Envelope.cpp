@@ -56,7 +56,7 @@ void Envelope::trigger( bool recursive )
 
 void Envelope::setMax( float max, bool keepValueTheSame )
 {
-	setMinAndMax( max, mFormat.mMin, keepValueTheSame );
+	setMinAndMax( mFormat.mMin, max, keepValueTheSame );
 }
 
 float Envelope::getMax()
@@ -66,7 +66,7 @@ float Envelope::getMax()
 
 void Envelope::setMin( float min, bool keepValueTheSame )
 {
-	setMinAndMax( mFormat.mMax, min, keepValueTheSame );
+	setMinAndMax( min, mFormat.mMax, keepValueTheSame );
 }
 
 float Envelope::getMin()
@@ -145,7 +145,7 @@ std::vector<RenderData> Envelope::render()
 	drawFillHighlight( data, ( mDrawFillHighlight && mVisible ) ? mColorFillHighlight : mColorClear );
 	drawOutline( data, ( mDrawOutline && mVisible ) ? mColorOutline : mColorClear );
 	drawOutlineHighlight( data, ( mDrawOutlineHighlight && mVisible ) ? mColorOutlineHighlight : mColorClear );
-	for( int i = data.size(); i < 5994; i++ ) {
+	for( int i = (int)data.size(); i < 5994; i++ ) {
 		data.emplace_back( RenderData() );
 	}
 	return data;
@@ -155,7 +155,7 @@ JsonTree Envelope::save()
 {
 	JsonTree tree = View::save();
 	JsonTree subtree = JsonTree::makeArray( "KEYFRAMES" );
-	int total = mTimes.size();
+	int total = (int)mTimes.size();
 	for( int i = 0; i < total; i++ ) {
 		JsonTree subsubtree;
 		subsubtree.addChild( JsonTree( "TIME", mTimes[i] ) );
@@ -174,7 +174,7 @@ void Envelope::load( const JsonTree &data )
 	mKeys.clear();
 	if( data.hasChild( "KEYFRAMES" ) ) {
 		auto pts = data.getChild( "KEYFRAMES" );
-		int total = pts.getNumChildren();
+		int total = (int)pts.getNumChildren();
 		for( int i = 0; i < total; i++ ) {
 			auto child = pts.getChild( i );
 			mTimes.emplace_back( child.getValueForKey<float>( "TIME" ) );
@@ -291,7 +291,7 @@ float Envelope::getValue( float time )
 			int leftIndex = bi - 1;
 			float st = 0;
 			if( leftIndex == -1 ) {
-				leftIndex = times.size() - 1;
+				leftIndex = (int)times.size() - 1;
 				st = times[leftIndex];
 				st -= 1.0f;
 			}
@@ -349,7 +349,7 @@ void Envelope::input( const ci::app::MouseEvent &event )
 		}
 
 		if( bd > mFormat.mThreshold ) {
-			mHitIndex = mTimes.size();
+			mHitIndex = (int)mTimes.size();
 			addKey( hp.x, lmap<float>( hp.y, 1.0, 0.0, mFormat.mMin, mFormat.mMax ) );
 			updateLabel( hp.x );
 		}

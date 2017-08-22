@@ -42,8 +42,8 @@ void DialerT<T>::setup()
 	else {
 		maxLengthString = "+" + maxString;
 	}
-	mSetWidth = maxLengthString.length() - 1;
-	mNumOfPrecisionZones = maxLengthString.length();
+	mSetWidth = (int)maxLengthString.length() - 1;
+	mNumOfPrecisionZones = (int)maxLengthString.length();
 
 	if( !mFormat.mSign ) {
 		//        mSetWidth--;
@@ -57,7 +57,7 @@ void DialerT<T>::setup()
 		mFormat.mPrecision = 0;
 	}
 	else {
-		mDotIndex = mNumOfPrecisionZones - dotIndex;
+		mDotIndex = (int)mNumOfPrecisionZones - (int)dotIndex;
 	}
 
 	if( !mLabelRef ) {

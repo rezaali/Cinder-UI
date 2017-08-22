@@ -394,7 +394,7 @@ void Canvas::draw()
 	gl::ScopedGlslProg glsl( mGlslProgRef );
 	gl::ScopedVao vao( mVaoRef );
 
-	glDrawArrays( GL_TRIANGLES, 0, mRenderData.size() );
+	glDrawArrays( GL_TRIANGLES, 0, (int)mRenderData.size() );
 
 	View::draw();
 

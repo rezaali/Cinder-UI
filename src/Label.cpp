@@ -665,7 +665,7 @@ vector<RenderData> Label::render()
 	}
 	drawOutline( data, ( mDrawOutline && mVisible ) ? mColorOutline : mColorClear );
 	drawOutlineHighlight( data, ( mDrawOutlineHighlight && mVisible ) ? mColorOutlineHighlight : mColorClear );
-	for( int i = data.size(); i < 1998; i++ ) {
+	for( int i = (int)data.size(); i < 1998; i++ ) {
 		data.push_back( RenderData() );
 	}
 	return data;

@@ -50,7 +50,7 @@ class View : public Responder, public std::enable_shared_from_this<class View> {
 	void setVisible( bool visible );
 
 	virtual void setOrigin( glm::vec2 origin );
-	glm::vec2 getOrigin( bool recursive = true );
+	virtual glm::vec2 getOrigin( bool recursive = true );
 
 	virtual void setSize( glm::vec2 size );
 	glm::vec2 getSize();

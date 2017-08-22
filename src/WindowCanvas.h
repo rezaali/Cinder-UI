@@ -19,10 +19,10 @@ class WindowCanvas : public Canvas {
 	void close();
 	bool isValid();
 	bool &getValidRef();
-
-	glm::vec2 getPos();
-	void setPos( glm::vec2 pos );
-
+    
+    void setPos( glm::vec2 origin );
+    glm::vec2 getPos();
+    
 	void autoSizeToFitSubviews() override;
 
 	void save( const ci::fs::path &path ) override;

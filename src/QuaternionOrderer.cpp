@@ -114,7 +114,7 @@ std::vector<RenderData> QuaternionOrderer::render()
 	drawFillHighlight( data, ( mDrawFillHighlight && mVisible ) ? mColorFillHighlight : mColorClear );
 	drawOutline( data, ( mDrawOutline && mVisible ) ? mColorOutline : mColorClear );
 	drawOutlineHighlight( data, ( mDrawOutlineHighlight && mVisible ) ? mColorOutlineHighlight : mColorClear );
-	for( int i = data.size(); i < 5994; i++ ) {
+	for( int i = (int)data.size(); i < 5994; i++ ) {
 		data.emplace_back( RenderData() );
 	}
 	return data;
@@ -124,7 +124,7 @@ JsonTree QuaternionOrderer::save()
 {
 	JsonTree tree = View::save();
 	JsonTree subtree = JsonTree::makeArray( "POINTS" );
-	int total = mTimes.size();
+	int total = (int)mTimes.size();
 	for( int i = 0; i < total; i++ ) {
 		quat q = mQuats[i];
 		JsonTree subsubtree;
@@ -147,7 +147,7 @@ void QuaternionOrderer::load( const JsonTree &data )
 	mQuats.clear();
 	if( data.hasChild( "POINTS" ) ) {
 		auto pts = data.getChild( "POINTS" );
-		int total = pts.getNumChildren();
+		int total = (int)pts.getNumChildren();
 		for( int i = 0; i < total; i++ ) {
 			auto child = pts.getChild( i );
 			mTimes.emplace_back( child.getValueForKey<float>( "T" ) );
@@ -267,7 +267,7 @@ quat QuaternionOrderer::getQuat( float time )
 			int leftIndex = bi - 1;
 			float st = 0;
 			if( leftIndex == -1 ) {
-				leftIndex = times.size() - 1;
+				leftIndex = (int)times.size() - 1;
 				st = times[leftIndex];
 				st -= 1.0f;
 			}

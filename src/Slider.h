@@ -85,15 +85,17 @@ class SliderT : public ControlWithLabel {
 	T getMax();
 	void setMin( T min, bool keepValueTheSame = false );
 	T getMin();
-	glm::vec2 getMaxAndMin();
+	glm::vec2 getMinAndMax();
 	void setMinAndMax( T min, T max, bool keepValueTheSame = false );
 	void setValueRef( T *value );
 
 	bool isDraggable() override { return true; }
-  protected:
+    void trigger( bool recursive = false ) override;
+    
+protected:
 	virtual void setup() override;
 	void update() override;
-	void trigger( bool recursive = false ) override;
+	
 	void updateValueRef();
 	void updateLabel();
 

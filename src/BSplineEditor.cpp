@@ -76,7 +76,7 @@ void BSplineEditor::load( const ci::JsonTree &data )
 	mControlPoints.clear();
 	if( data.hasChild( "POINTS" ) ) {
 		auto pts = data.getChild( "POINTS" );
-		int total = pts.getNumChildren();
+		int total = (int)pts.getNumChildren();
 		if( (int)mControlPoints.size() < total ) {
 			mControlPoints.resize( total );
 		}
@@ -204,7 +204,7 @@ void BSplineEditor::updateSplineRef( bool force )
 		mSplineRef = new BSpline2f( mControlPoints, mDegree, mLoop, mOpen );
 	}
 	else {
-		int total = mControlPoints.size();
+		int total = (int)mControlPoints.size();
 		for( int i = 0; i < total; i++ ) {
 			mSplineRef->setControlPoint( i, mControlPoints[i] );
 		}
@@ -263,7 +263,7 @@ std::vector<RenderData> BSplineEditor::render()
 	drawFillHighlight( data, ( mDrawFillHighlight && mVisible ) ? mColorFillHighlight : mColorClear );
 	drawOutline( data, ( mDrawOutline && mVisible ) ? mColorOutline : mColorClear );
 	drawOutlineHighlight( data, ( mDrawOutlineHighlight && mVisible ) ? mColorOutlineHighlight : mColorClear );
-	for( int i = data.size(); i < 5994; i++ ) {
+	for( int i = (int)data.size(); i < 5994; i++ ) {
 		data.emplace_back( RenderData() );
 	}
 	return data;
@@ -353,7 +353,7 @@ void BSplineEditor::input( const ci::app::MouseEvent &event )
 		float distance = 100000.0;
 		int index = -1;
 		std::map<float, int> distMap;
-		int totalCtrlPts = mControlPoints.size();
+		int totalCtrlPts = (int)mControlPoints.size();
 		bool addToEnd = true;
 
 		for( int i = 0; i < totalCtrlPts; i++ ) {
@@ -417,7 +417,7 @@ void BSplineEditor::input( const ci::app::MouseEvent &event )
 		}
 
 		if( addToEnd ) {
-			mHitIndex = mControlPoints.size();
+			mHitIndex = (int)mControlPoints.size();
 			mControlPoints.push_back( hp );
 			updateSplineRef();
 		}

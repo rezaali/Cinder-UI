@@ -64,7 +64,7 @@ class MultiSlider : public Control {
 
 	bool isDraggable() override { return true; }
 	MultiSlider( std::string name, const std::vector<Data> data, Format format = Format() );
-
+    
   protected:
 	void setup() override;
 	void update() override;

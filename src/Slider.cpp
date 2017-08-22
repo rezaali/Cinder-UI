@@ -153,7 +153,7 @@ SliderT<T> *SliderT<T>::setCallback( const std::function<void( T )> &callback )
 template <typename T>
 void SliderT<T>::setMax( T max, bool keepValueTheSame )
 {
-	setMinAndMax( max, mMin, keepValueTheSame );
+	setMinAndMax( mMin, max, keepValueTheSame );
 }
 
 template <typename T>
@@ -165,7 +165,7 @@ T SliderT<T>::getMax()
 template <typename T>
 void SliderT<T>::setMin( T min, bool keepValueTheSame )
 {
-	setMinAndMax( mMax, min, keepValueTheSame );
+	setMinAndMax( min, mMax, keepValueTheSame );
 }
 
 template <typename T>
@@ -175,9 +175,9 @@ T SliderT<T>::getMin()
 }
 
 template <typename T>
-vec2 SliderT<T>::getMaxAndMin()
+vec2 SliderT<T>::getMinAndMax()
 {
-	return vec2( mMax, mMin );
+	return vec2( mMin, mMax );
 }
 
 template <typename T>
