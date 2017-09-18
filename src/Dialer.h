@@ -119,7 +119,7 @@ class DialerT : public ControlWithLabel {
 	bool mUseRef;
 	int mSetWidth;
 
-	double mZoneMultiplier;
+	T mZoneMultiplier;
 	glm::vec2 mHitPoint;
 	int mNumOfPrecisionZones;
 	int mCurrentPrecisionZone;
