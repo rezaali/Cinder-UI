@@ -11,6 +11,7 @@
 #include "cinder/gl/GlslProg.h"
 #include "cinder/gl/Vao.h"
 #include "cinder/gl/Vbo.h"
+#include "cinder/gl/Fbo.h"
 
 namespace reza {
 namespace ui {
@@ -198,6 +199,7 @@ class Canvas : public Control {
 	Alignment mAlignment;
 	FontSize mFontsize;
 	ci::app::WindowRef mWindowRef;
+    ci::gl::FboRef mFboRef;
 };
 }
 } //namespace reza::ui

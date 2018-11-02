@@ -375,30 +375,64 @@ void Canvas::draw()
 	if( !mSetup ) {
 		setup();
 	}
-
-	getRenderData();
+    
+    ivec2 size = getSize();
+    int fboScale = 4;
+    if(!mFboRef || mFboRef->getSize().x != fboScale * size.x || mFboRef->getSize().y != fboScale * size.y) {
+        gl::Fbo::Format format;
+        format.setSamples(0);
+        format.setColorTextureFormat(Texture::Format().minFilter(GL_NEAREST).magFilter(GL_NEAREST));
+        mFboRef = gl::Fbo::create(fboScale * size.x, fboScale * size.y, format);
+    }
 
 	if( mGlslProgRef == nullptr ) {
 		setupShader();
 		return;
 	}
+    
+    if(mSetNeedsDisplay)
+    {
+        getRenderData();
+        
+        gl::ScopedFramebuffer scpFbo( mFboRef );
+        
+        gl::clear( ColorA( 0.0f, 0.0f, 0.0f, 0.0f ) );
+        gl::ScopedViewport scpVp( ivec2( 0 ), 4 * size );
+        
+        gl::ScopedColor scpClr( Color::white() );
+        gl::enableAlphaBlending();
+        gl::enableDepth( false );
 
-	gl::ScopedColor scpClr( Color::white() );
-	gl::enableAlphaBlending();
-	gl::enableDepth( false );
+        gl::pushMatrices();
+        
+        ivec2 origin = getOrigin(true);
+        origin *= fboScale;
+        
+        gl::setMatricesWindow( fboScale * size);
+        gl::translate(-origin.x, -origin.y);
+        gl::scale(fboScale, fboScale, 1);
+        
+        mGlslProgRef->uniform( "uModelViewProjection", gl::getModelViewProjection() );
 
-	gl::pushMatrices();
+        gl::ScopedGlslProg glsl( mGlslProgRef );
+        gl::ScopedVao vao( mVaoRef );
 
-	mGlslProgRef->uniform( "uModelViewProjection", gl::getModelViewProjection() );
+        glDrawArrays( GL_TRIANGLES, 0, (int)mRenderData.size() );
 
-	gl::ScopedGlslProg glsl( mGlslProgRef );
-	gl::ScopedVao vao( mVaoRef );
+        View::draw();
 
-	glDrawArrays( GL_TRIANGLES, 0, (int)mRenderData.size() );
+        gl::popMatrices();
+    }
+    
+    
+    gl::ScopedColor scpClr( Color::white() );
+    gl::enableAlphaBlending();
+    gl::enableDepth( false );
+    gl::pushMatrices();
+    Rectf rect = Rectf((int)mBounds.getX1(), (int)mBounds.getY1(), (int)mBounds.getX2(), (int)mBounds.getY2());
+    gl::draw(mFboRef->getColorTexture(), rect);
+    gl::popMatrices();
 
-	View::draw();
-
-	gl::popMatrices();
 }
 
 void Canvas::disableUpdateCallback()

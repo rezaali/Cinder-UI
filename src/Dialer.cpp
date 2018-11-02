@@ -98,7 +98,7 @@ template <typename T>
 JsonTree DialerT<T>::save()
 {
     JsonTree tree = View::save();
-    tree.addChild( JsonTree( "VALUE", getValue() ) );
+    tree.addChild( JsonTree( "VALUE", (T)getValue() ) );
     return tree;
 }
 
@@ -141,7 +141,7 @@ const std::string DialerT<double>::getType()
 template <typename T>
 void DialerT<T>::setValue( T value )
 {
-    mValue = lmap<double>( value, mMin, mMax, 0.0, 1.0 );
+    mValue = lmap<double>( value, mMin, mMax, 0.0, 1.0 );    
     updateValueRef();
     updateLabel();
     setNeedsDisplay();
@@ -161,7 +161,7 @@ double DialerT<T>::getNormalizedValue()
 template <typename T>
 void DialerT<T>::updateValueRef()
 {
-    *mValueRef = ceil( lmap<double>( mValue, 0.0, 1.0, mMin, mMax ) );
+    *mValueRef = lmap<double>( mValue, 0.0, 1.0, mMin, mMax );
 }
 
 template <typename T>
