@@ -297,7 +297,7 @@ void ColorPicker::mouseMove( ci::app::MouseEvent &event )
 
 void ColorPicker::mouseWheel( ci::app::MouseEvent &event )
 {
-	if( isHit( event.getPos() ) && !mHit ) {
+	if( mState == State::OVER ) {
 		mColor.a -= event.getWheelIncrement() * mFormat.mSensitivity;
 		mColor.a = std::max( std::min( mColor.a, mFormat.mAlphaLimits.y ), mFormat.mAlphaLimits.x );
 		updateColorRef();
